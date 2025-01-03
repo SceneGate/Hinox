@@ -1,0 +1,13 @@
+# Build outputs
+obj/
+bin/
+build/artifacts/
+build/temp/
+/CHANGELOG.md
+/CHANGELOG.NEXT.md
+
+# IDEs
+.vs/
+*.csproj.user
+*.DotSettings.user
+launchSettings.json
