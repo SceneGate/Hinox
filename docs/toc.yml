@@ -1,11 +1,11 @@
-- name: Guides
-  href: articles/
+- name: Dev guides
+  href: articles/dev/
 
-- name: API
-  href: api/
+- name: Format specs
+  href: articles/specs/
 
 - name: Changelog
   href: articles/changelog.md
 
 - name: GitHub
-  href: https://github.com/pleonex/template-csharp
+  href: https://github.com/SceneGate/Hinox

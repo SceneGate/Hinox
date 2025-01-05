@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>HinoxUtils</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <IsPackable>true</IsPackable>
+
+    <TargetFramework>net8.0</TargetFramework>
+
+    <!-- Keep the name of the exe simple while having a full NuGet package name -->
+    <PackageId>SceneGate.Hinox.Utils</PackageId>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>hinox-utils</ToolCommandName>
+
+    <RootNamespace>SceneGate.Hinox.Utils</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../../docs/index.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="False" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Hinox/Hinox.csproj" />
+  </ItemGroup>
+
+</Project>

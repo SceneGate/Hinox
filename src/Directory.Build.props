@@ -1,9 +1,9 @@
 <Project>
   <PropertyGroup>
-    <Product>PleOps</Product>
-    <Authors>pleonex</Authors>
+    <Product>SceneGate</Product>
+    <Authors>scenegate</Authors>
     <Company>None</Company>
-    <Copyright>Copyright (C) 2020 Benito Palacios Sánchez</Copyright>
+    <Copyright>Copyright (C) 2025 SceneGate</Copyright>
 
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
@@ -14,10 +14,10 @@
 
   <PropertyGroup>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/pleonex/template-csharp</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/pleonex/template-csharp</RepositoryUrl>
+    <PackageProjectUrl>https://scenegate.github.io/Hinox</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/SceneGate/Hinox</RepositoryUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>net;csharp;devops;pipeline;github-actions</PackageTags>
+    <PackageTags>reverse-engineering;romhacking;rom-hacking;ps1;psx;</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 

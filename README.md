@@ -1,17 +1,17 @@
-# .NET project template
+# Hinox
 
 <!-- markdownlint-disable MD033 -->
 <p align="center">
-  <a href="https://dev.azure.com/benito356/NetDevOpsTest/_packaging?_a=package&feed=e3acf8ba-ec70-46f0-b1a5-da1ce3dd5d9f&package=b8696a32-e71a-4479-9b0e-002997b8d8ef&preferRelease=true">
-    <img alt="Stable version" src="https://feeds.dev.azure.com/benito356/339c91a8-9d6c-4082-8b1a-93c2ae76b637/_apis/public/Packaging/Feeds/e3acf8ba-ec70-46f0-b1a5-da1ce3dd5d9f/Packages/b8696a32-e71a-4479-9b0e-002997b8d8ef/Badge" />
+  <a href="https://www.nuget.org/packages/SceneGate.Hinox">
+    <img alt="Stable version" src="https://img.shields.io/nuget/v/SceneGate.Hinox?label=nuget.org&logo=nuget" />
   </a>
   &nbsp;
-  <a href="https://dev.azure.com/benito356/NetDevOpsTest/_artifacts/feed/Example-Preview">
-    <img alt="GitHub commits since latest release (by SemVer)" src="https://img.shields.io/github/commits-since/pleonex/template-csharp/latest?sort=semver" />
+  <a href="https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview">
+    <img alt="GitHub commits since latest release (by SemVer)" src="https://img.shields.io/github/commits-since/SceneGate/Hinox/latest?sort=semver" />
   </a>
   &nbsp;
-  <a href="https://github.com/pleonex/template-csharp/workflows/Build%20and%20release">
-    <img alt="Build and release" src="https://github.com/pleonex/template-csharp/workflows/Build%20and%20release/badge.svg?branch=main&event=push" />
+  <a href="https://github.com/SceneGate/Hinox/actions/workflows/build-and-release.yml">
+    <img alt="Build and release" src="https://github.com/SceneGate/Hinox/actions/workflows/build-and-release.yml/badge.svg" />
   </a>
   &nbsp;
   <a href="https://choosealicense.com/licenses/mit/">
@@ -20,46 +20,75 @@
   &nbsp;
 </p>
 
-Repository template for .NET projects with a complete DevOps workflow. It uses
-the build system and best-practices from
-[PleOps.Cake](https://www.pleonex.dev/PleOps.Cake/).
+_Hinox_ is a library part of the [_SceneGate_](https://github.com/SceneGate)
+framework that provides support for **PS1 (PSX) file formats.**
 
-- ♻️ DevOps best practices for a software project
-- 🔧 Build, test and release .NET projects
-- 📚 Documentation
-- 🤖 Continuous integration
+## Supported formats
 
-## Tech stack
+🚧 Project in an early development phase. No formats are supported yet.
 
-- **Projects**: C# / .NET
-- **Documentation**: DocFX, GitHub page
-- **CI**: GitHub Actions
-- **Release deployment**: NuGet feeds, GitHub
+## Usage
 
-## Get started
+The project provides the following .NET libraries (NuGet packages in nuget.org).
+The libraries work on supported versions of .NET.
 
-Follow the
-[setup guide started guide from PleOps.Cake](https://www.pleonex.dev/PleOps.Cake/docs/getting-started/setup-template.html)
-to adapt this template to your project.
+- [![SceneGate.Hinox](https://img.shields.io/nuget/v/SceneGate.Hinox?label=SceneGate.Hinox&logo=nuget)](https://www.nuget.org/packages/SceneGate.Hinox)
+  🚧 **not ready yet**
+  - `SceneGate.Hinox.Audio`: audio codecs.
 
-Feel free to ask any question in the
-[PleOps.Cake project discussion](https://github.com/pleonex/PleOps.Cake/discussions).
+Preview releases can be found in this
+[Azure DevOps package repository](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview).
+To use a preview release, create a file `nuget.config` in the same directory of
+your solution file (.sln) with the following content:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <clear/>
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+    <add key="SceneGate-Preview" value="https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json" />
+  </packageSources>
+  <packageSourceMapping>
+    <packageSource key="nuget.org">
+      <package pattern="*" />
+    </packageSource>
+    <packageSource key="SceneGate-Preview">
+      <package pattern="SceneGate.Hinox*" />
+    </packageSource>
+  </packageSourceMapping>
+</configuration>
+```
+
+## Documentation
+
+Documentation is not yet available, but it will be published in the
+[project website](https://scenegate.github.io/Hinox).
+
+Don't hesitate to ask questions in the
+[project Discussion site!](https://github.com/SceneGate/Hinox/discussions)
 
 ## Build
 
-The project requires to build .NET 8.0 SDK.
+The project requires .NET 9.0 SDK to build.
 
 To build, test and generate artifacts run:
 
 ```sh
-# Build and run tests (with code coverage!)
+# Build and run tests
 dotnet run --project build/orchestrator
 
 # (Optional) Create bundles (nuget, zips, docs)
 dotnet run --project build/orchestrator -- --target=Bundle
 ```
 
-## Release
+To build the documentation only, run:
 
-Create a new GitHub release with a tag `v{Version}` (e.g. `v2.4`) and that's it!
-This triggers a pipeline that builds and deploy the project.
+```sh
+dotnet docfx docs/docfx.json --serve
+```
+
+## Special thanks
+
+The standard file formats were based on the amazing reverse engineering work of
+Martin Korth at [PSX Spex](http://problemkaputt.de/psx-spx.htm).

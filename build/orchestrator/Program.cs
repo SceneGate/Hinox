@@ -13,19 +13,15 @@ public sealed class BuildLifetime : FrostingLifetime<PleOpsBuildContext>
 {
     public override void Setup(PleOpsBuildContext context, ISetupContext info)
     {
-        // HERE you can set default values overridable by command-line
-        // TODO EXAMPLE: context.WarningsAsErrors = false;
-        context.DotNetContext.ApplicationProjects.Add(new ProjectPublicationInfo(
-            "./src/MyConsole", new[] { "win-x64", "linux-x64", "osx-x64" }, "net8.0"));
-
-        // Update build parameters from command line arguments.
+        // Do not enforce coverage as everyone may not have all test resources
+        context.DotNetContext.CoverageTarget = 0;
         context.ReadArguments();
 
-        // HERE you can force values non-overridable.
-        context.DotNetContext.PreviewNuGetFeed = "https://pkgs.dev.azure.com/benito356/NetDevOpsTest/_packaging/Example-Preview/nuget/v3/index.json";
-        context.DotNetContext.StableNuGetFeed = "https://pkgs.dev.azure.com/benito356/NetDevOpsTest/_packaging/Example-Preview/nuget/v3/index.json";
+        context.DotNetContext.ApplicationProjects.Add(
+            new ProjectPublicationInfo("./src/Hinox.Utils", ["win-x64", "linux-64", "osx-64"], "net8.0"));
 
-        // Print the build info to use.
+        context.DotNetContext.PreviewNuGetFeed = "https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json";
+
         context.Print();
     }
 

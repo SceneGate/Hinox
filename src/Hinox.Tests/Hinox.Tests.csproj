@@ -1,18 +1,27 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <AssemblyName>SceneGate.Hinox.Tests</AssemblyName>
+    <Description>Tests for Hinox.</Description>
+
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
+
+    <RootNamespace>SceneGate.Hinox.Tests</RootNamespace>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../MyLibrary/MyLibrary.csproj" />
+    <ProjectReference Include="../Hinox/Hinox.csproj" />
 
     <PackageReference Include="nunit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="NUnit.Analyzers" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="coverlet.collector" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\**\*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

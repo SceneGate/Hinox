@@ -1,3 +1,0 @@
-# Project architecture
-
-TODO...

@@ -1,11 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>My custom public library.</Description>
+    <AssemblyName>SceneGate.Hinox</AssemblyName>
+    <Description>Library for PSX (PS1) console standard file formats.</Description>
     <IsPackable>true</IsPackable>
 
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
 
+    <RootNamespace>SceneGate.Hinox</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
