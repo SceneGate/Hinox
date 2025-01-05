@@ -18,7 +18,7 @@ public sealed class BuildLifetime : FrostingLifetime<PleOpsBuildContext>
         context.ReadArguments();
 
         context.DotNetContext.ApplicationProjects.Add(
-            new ProjectPublicationInfo("./src/Hinox.Utils", ["win-x64", "linux-64", "osx-64"], "net8.0"));
+            new ProjectPublicationInfo("./src/Hinox.Utils", ["win-x64", "linux-x64", "osx-x64"], "net8.0"));
 
         context.DotNetContext.PreviewNuGetFeed = "https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json";
 

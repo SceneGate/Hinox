@@ -1,25 +1,25 @@
 {
-  "metadata": [
-    {
-      "src": [
-        {
-          "files": [
-            "Hinox/*.csproj"
-          ],
-          "src": "../src"
-        }
-      ],
-      "dest": "api",
-      "includePrivateMembers": false,
-      "disableGitFeatures": false,
-      "disableDefaultFilter": false,
-      "noRestore": false,
-      "namespaceLayout": "flattened",
-      "memberLayout": "samePage",
-      "EnumSortOrder": "alphabetic",
-      "allowCompilationErrors": false
-    }
-  ],
+  // "metadata": [
+  //   {
+  //     "src": [
+  //       {
+  //         "files": [
+  //           "Hinox/*.csproj"
+  //         ],
+  //         "src": "../src"
+  //       }
+  //     ],
+  //     "dest": "api",
+  //     "includePrivateMembers": false,
+  //     "disableGitFeatures": false,
+  //     "disableDefaultFilter": false,
+  //     "noRestore": false,
+  //     "namespaceLayout": "flattened",
+  //     "memberLayout": "samePage",
+  //     "EnumSortOrder": "alphabetic",
+  //     "allowCompilationErrors": false
+  //   }
+  // ],
   "build": {
     "content": [
       {

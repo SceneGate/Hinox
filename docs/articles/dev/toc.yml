@@ -8,6 +8,6 @@
 - name: 🚧 Audio
   href: features/audio.md
 
-- name: 📃 API docs
-- name: Namespaces
-  href: ../../api/toc.yml
+# - name: 📃 API docs
+# - name: Namespaces
+#   href: ../../api/toc.yml
