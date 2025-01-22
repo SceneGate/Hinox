@@ -17,4 +17,8 @@
     <None Include="../../docs/index.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="False" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Yarhl" />
+  </ItemGroup>
+
 </Project>

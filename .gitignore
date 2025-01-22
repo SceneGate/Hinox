@@ -11,3 +11,6 @@ build/temp/
 *.csproj.user
 *.DotSettings.user
 launchSettings.json
+
+# Test resources
+resources/
