@@ -19,7 +19,7 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
 
         source.Stream.Position = 0;
         var reader = new DataReader(source.Stream) {
-            Endianness = EndiannessMode.BigEndian,
+            Endianness = EndiannessMode.LittleEndian,
         };
 
         var header = new VabHeader();
@@ -31,7 +31,7 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
             VabProgramAttributes program = ReadProgramAttributes(reader, out int toneCount);
             header.ProgramsAttributes.Add(program);
 
-            source.Stream.Position = 0x800 + (0x20 * tonesRead);
+            source.Stream.Position = 0x820 + (0x20 * tonesRead);
             for (int t = 0; t < toneCount; t++) {
                 VabToneAttributes tone = ReadToneAttributes(reader);
                 if (tone.ProgramIndex != p) {
@@ -76,9 +76,9 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         header.FullSize = reader.ReadInt32();
         header.Reserved0 = reader.ReadInt16();
 
-        int programCount = reader.ReadUInt16() + 1;
+        int programCount = reader.ReadUInt16();
         int toneCount = reader.ReadUInt16();
-        int waveformCount = reader.ReadUInt16();
+        int waveformCount = reader.ReadUInt16() + 1;
 
         header.MasterVolume = reader.ReadByte();
         header.MasterPan = reader.ReadByte();
@@ -100,8 +100,8 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         program.MasterPanning = reader.ReadByte();
         program.Reserved0 = reader.ReadByte();
         program.Attributes = reader.ReadInt16();
-        program.Reserved1 = reader.ReadByte();
-        program.Reserved2 = reader.ReadByte();
+        program.Reserved1 = reader.ReadInt32();
+        program.Reserved2 = reader.ReadInt32();
 
         return program;
     }
