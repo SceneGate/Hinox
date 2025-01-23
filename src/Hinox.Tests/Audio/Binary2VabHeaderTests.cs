@@ -37,6 +37,11 @@ public class Binary2VabHeaderTests
             yield return new TestCaseData(filePath)
                 .SetArgDisplayNames(Path.GetRelativePath(validationPath, filePath));
         }
+
+        foreach (string filePath in Directory.EnumerateFiles(validationPath, "*.HED", SearchOption.AllDirectories)) {
+            yield return new TestCaseData(filePath)
+                .SetArgDisplayNames(Path.GetRelativePath(validationPath, filePath));
+        }
     }
 
     [TestCaseSource(nameof(GetVhSnapshotTestFiles))]

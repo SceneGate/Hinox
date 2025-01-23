@@ -10,7 +10,7 @@ using Yarhl.IO;
 /// </summary>
 public class Binary2VabHeader : IConverter<IBinary, VabHeader>
 {
-    private static readonly int[] supportedVersions = [5, 7];
+    private static readonly int[] supportedVersions = [5, 6, 7];
 
     /// <inheritdoc />
     public VabHeader Convert(IBinary source)
@@ -25,21 +25,36 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         var header = new VabHeader();
         SectionsInfo sectionsInfo = ReadGeneralInfo(reader, header);
 
+        // TODO: Improve handling of empty entries
+        // TODO: Store empty entries info to generate 100% same file
         int tonesRead = 0;
-        for (int p = 0; p < sectionsInfo.ProgramCount; p++) {
+        for (int p = 0, programsRead = 0; programsRead < sectionsInfo.ProgramCount; p++) {
             source.Stream.Position = 0x20 + (p * 0x10);
             VabProgramAttributes program = ReadProgramAttributes(reader, out int toneCount);
+            if (toneCount == 0) {
+                // Between programs, some info are empty and doesn't count toward count in header
+                continue;
+            }
+
+            programsRead++;
             header.ProgramsAttributes.Add(program);
 
             source.Stream.Position = 0x820 + (0x20 * tonesRead);
             for (int t = 0; t < toneCount; t++) {
                 VabToneAttributes tone = ReadToneAttributes(reader);
+                if (tone.WaveformIndex == 0) {
+                    // After program tones, it keeps saying it's for the same program but they are empty only some fields set
+                    tonesRead++;
+                    t--;
+                    continue;
+                }
+
                 if (tone.ProgramIndex != p) {
-                    throw new FormatException($"Invalid program index in tone #{t}/{p}");
+                    throw new FormatException($"Invalid program index in tone #{p}/{t} -> {tone.ProgramIndex}");
                 }
 
                 if (tone.WaveformIndex >= sectionsInfo.WaveformCount) {
-                    throw new FormatException($"Invalid waveform index in tone #{t}/{p}");
+                    throw new FormatException($"Invalid waveform index in tone #{p}/{t}");
                 }
 
                 program.TonesAttributes.Add(tone);
@@ -47,7 +62,7 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
             }
         }
 
-        if (tonesRead != sectionsInfo.TotalToneCount) {
+        if (header.ProgramsAttributes.Sum(p => p.TonesAttributes.Count) != sectionsInfo.TotalToneCount) {
             throw new FormatException(
                 $"Invalid count of tones. Read: {tonesRead}, from header: {sectionsInfo.TotalToneCount}");
         }
