@@ -16,6 +16,16 @@ indent_style = space
 indent_size = 2
 max_line_length = 80
 
+# Verify settings
+[*.{received,verified}.{json,txt,xml}]
+charset = "utf-8-bom"
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = false
+tab_width = 8
+trim_trailing_whitespace = false
+
 # XML project files
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
 indent_size = 2

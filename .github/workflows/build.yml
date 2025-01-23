@@ -34,6 +34,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload test failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verify-test-results
+          path: |
+            **/*.received.*
+
       - name: "Bundle"
         if: ${{ matrix.is_main_build }}
         run: dotnet run --project build/orchestrator -- --target=Bundle --dotnet-configuration=Release
