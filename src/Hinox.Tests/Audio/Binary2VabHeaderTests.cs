@@ -1,8 +1,8 @@
 ﻿namespace SceneGate.Hinox.Tests.Audio;
 
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using SceneGate.Hinox.Audio;
@@ -14,57 +14,32 @@ using Yarhl.IO;
 [TestFixture]
 public class Binary2VabHeaderTests
 {
-    private static string VabResourcesPath => Path.Combine(TestDataBase.AudioResources, "VAB");
+    private static IEnumerable VhSnapshotTestFiles =>
+        TestDataBase.ReadTestCaseDataListFile(TestDataBase.VabResources, "vh_snapshots.txt");
 
-    public static IEnumerable GetVhSnapshotTestFiles()
+    private static IEnumerable<TestCaseData> VhReadingTestFiles =>
+        TestDataBase.ReadTestCaseDataGlobFile(TestDataBase.VabResources, "vh_read.txt");
+
+    [TestCaseSource(nameof(VhSnapshotTestFiles))]
+    public Task VerifyDeserializationForSnapshots(string filename)
     {
-        string listFilePath = Path.Combine(VabResourcesPath, "snapshots_vh.txt");
-        return TestDataBase.ReadTestListFile(listFilePath)
-            .Select(data => data.Split(','))
-            .Select(data => new TestCaseData(data));
-    }
-
-    public static IEnumerable GetAllVhTestFiles()
-    {
-        string listFilePath = Path.Combine(VabResourcesPath, "snapshots_vh.txt");
-        foreach (string entry in TestDataBase.ReadTestListFile(listFilePath)) {
-            yield return new TestCaseData(Path.Combine(VabResourcesPath, "Snapshots", entry))
-                .SetArgDisplayNames(entry);
-        }
-
-        // TODO: convert to glob from txt file
-        string validationPath = Path.Combine(VabResourcesPath, "Validation");
-        foreach (string filePath in Directory.EnumerateFiles(validationPath, "*.vh", SearchOption.AllDirectories)) {
-            yield return new TestCaseData(filePath)
-                .SetArgDisplayNames(Path.GetRelativePath(validationPath, filePath));
-        }
-
-        foreach (string filePath in Directory.EnumerateFiles(validationPath, "*.HED", SearchOption.AllDirectories)) {
-            yield return new TestCaseData(filePath)
-                .SetArgDisplayNames(Path.GetRelativePath(validationPath, filePath));
-        }
-    }
-
-    [TestCaseSource(nameof(GetVhSnapshotTestFiles))]
-    public Task VerifyDeserializationForSnapshots(string relativePath)
-    {
-        string filePath = Path.Combine(TestDataBase.AudioResources, "VAB", "Snapshots", relativePath);
+        string filePath = Path.Combine(TestDataBase.VabResources, "Snapshots", filename);
         TestDataBase.IgnoreIfFileDoesNotExist(filePath);
 
         using Node testNode = NodeFactory.FromFile(filePath, FileOpenMode.Read)
             .TransformWith<Binary2VabHeader>();
         VabHeader actual = testNode.GetFormatAs<VabHeader>();
 
-        Verifier.UseProjectRelativeDirectory("Resources/Audio/VAB/Snapshots");
+        Verifier.UseProjectRelativeDirectory("Resources/VAB/Snapshots");
         return Verifier.Verify(actual)
-            .UseFileName(relativePath)
+            .UseFileName(filename)
             .AddExtraSettings(x => {
                 x.DefaultValueHandling = Argon.DefaultValueHandling.Include;
                 x.Converters.Add(new HexadecimalVerifierJsonConverter<VabHeader>());
             });
     }
 
-    [TestCaseSource(nameof(GetAllVhTestFiles))]
+    [TestCaseSource(nameof(VhReadingTestFiles))]
     public void ValidateAllFiles(string filePath)
     {
         TestDataBase.IgnoreIfFileDoesNotExist(filePath);

@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="../Hinox/Hinox.csproj" />
 
+    <PackageReference Include="Microsoft.Extensions.FileSystemGlobbing" />
     <PackageReference Include="nunit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="NUnit.Analyzers">

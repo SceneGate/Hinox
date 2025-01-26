@@ -25,7 +25,7 @@
           Volume: 127,
           Panning: 64,
           Centre: 64,
-          Shift: 0,
+          Fine: 0,
           Minimum: 0,
           Maximum: 127,
           VibW: 0,
