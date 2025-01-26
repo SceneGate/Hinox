@@ -20,6 +20,7 @@ public class Binary2VabHeaderTests
     {
         string listFilePath = Path.Combine(VabResourcesPath, "snapshots_vh.txt");
         return TestDataBase.ReadTestListFile(listFilePath)
+            .Select(data => data.Split(','))
             .Select(data => new TestCaseData(data));
     }
 

@@ -10,16 +10,6 @@ using Yarhl.IO;
 /// </summary>
 public class Binary2VabHeader : IConverter<IBinary, VabHeader>
 {
-    private const int HeaderSize = 0x20;
-
-    private const int ProgramAttributesSize = 0x10;
-    private const int MaximumPrograms = 0x80;
-
-    private const int ToneAttributesSize = 0x20;
-    private const int MaximumTones = 0x10;
-    private const int TonesSectionSize = MaximumTones * ToneAttributesSize;
-    private const int TonesAttributesOffset = HeaderSize + (MaximumPrograms * ProgramAttributesSize);
-
     private static readonly int[] supportedVersions = [5, 6, 7];
 
     /// <inheritdoc />
@@ -37,8 +27,11 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
 
         ReadProgramsWithAttributes(reader, header, sectionsInfo);
 
-        reader.Stream.Position = TonesAttributesOffset + (TonesSectionSize * sectionsInfo.ProgramCount);
+        reader.Stream.Position = VabHeader.TonesAttributesOffset
+            + (VabHeader.TonesSectionSizePerProgram * sectionsInfo.ProgramCount);
         ReadWaveformSizes(reader, header, sectionsInfo.WaveformCount);
+
+        ValidateFormat(header, sectionsInfo);
 
         return header;
     }
@@ -56,7 +49,7 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         }
 
         header.VabId = reader.ReadInt32();
-        header.FullSize = reader.ReadInt32();
+        int fullSize = reader.ReadInt32();
         header.Reserved0 = reader.ReadInt16();
 
         int programCount = reader.ReadUInt16();
@@ -69,16 +62,15 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         header.BankAttribute2 = reader.ReadByte();
         header.Reserved1 = reader.ReadInt32();
 
-        return new SectionsInfo(programCount, toneCount, waveformCount);
+        return new SectionsInfo(fullSize, programCount, toneCount, waveformCount);
     }
 
     private static void ReadProgramsWithAttributes(DataReader reader, VabHeader header, SectionsInfo sectionsInfo)
     {
-        int totalTones = 0;
         int programIdx = -1;
         while (header.ProgramsAttributes.Count < sectionsInfo.ProgramCount) {
             programIdx++;
-            reader.Stream.Position = HeaderSize + (programIdx * ProgramAttributesSize);
+            reader.Stream.Position = VabHeader.HeaderSize + (programIdx * VabHeader.ProgramAttributesSize);
 
             VabProgramAttributes program = ReadProgramAttributes(reader, out int toneCount);
             program.Index = programIdx;
@@ -89,46 +81,17 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
             }
 
             int readPrograms = header.ProgramsAttributes.Count;
-            reader.Stream.Position = TonesAttributesOffset + (TonesSectionSize * readPrograms);
-            var tones = ReadValidateTonesAttributes(reader, toneCount, programIdx, sectionsInfo.WaveformCount);
-            foreach (VabToneAttributes tone in tones) {
+            reader.Stream.Position = VabHeader.TonesAttributesOffset
+                + (VabHeader.TonesSectionSizePerProgram * readPrograms);
+
+            for (int toneIdx = 0; toneIdx < toneCount; toneIdx++) {
+                // NOTE: A program has always 16 tones but the remaining ones will be empty
+                VabToneAttributes tone = ReadToneAttributes(reader);
                 program.TonesAttributes.Add(tone);
-                totalTones++;
             }
 
             header.ProgramsAttributes.Add(program);
         }
-
-        if (totalTones != sectionsInfo.TotalToneCount) {
-            throw new FormatException(
-                $"Invalid count of tones. Read: {totalTones}, from header: {sectionsInfo.TotalToneCount}");
-        }
-    }
-
-    private static IReadOnlyCollection<VabToneAttributes> ReadValidateTonesAttributes(
-        DataReader reader,
-        int toneCount,
-        int programIdx,
-        int waveformCount)
-    {
-        List<VabToneAttributes> tones = [];
-        for (int toneIdx = 0; toneIdx < toneCount; toneIdx++) {
-            // NOTE: A program has always 16 tones but the remaining ones will be empty
-            VabToneAttributes tone = ReadToneAttributes(reader);
-
-            if (tone.ProgramIndex != programIdx) {
-                throw new FormatException(
-                    $"Invalid program index in tone #{programIdx}/{toneIdx} -> {tone.ProgramIndex}");
-            }
-
-            if (tone.WaveformIndex < 0 || tone.WaveformIndex >= waveformCount) {
-                throw new FormatException($"Invalid waveform index in tone #{programIdx}/{toneIdx}");
-            }
-
-            tones.Add(tone);
-        }
-
-        return tones;
     }
 
     private static VabProgramAttributes ReadProgramAttributes(DataReader reader, out int toneCount)
@@ -157,7 +120,7 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         tone.Volume = reader.ReadByte();
         tone.Panning = reader.ReadByte();
         tone.Centre = reader.ReadByte();
-        tone.Shift = reader.ReadByte();
+        tone.Fine = reader.ReadByte();
         tone.Minimum = reader.ReadByte();
         tone.Maximum = reader.ReadByte();
         tone.VibW = reader.ReadByte();
@@ -186,5 +149,43 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         }
     }
 
-    private sealed record SectionsInfo(int ProgramCount, int TotalToneCount, int WaveformCount);
+    private static void ValidateFormat(VabHeader format, SectionsInfo sectionsInfo)
+    {
+        int totalTones = 0;
+        foreach (VabProgramAttributes program in format.ProgramsAttributes) {
+
+            for (int toneIdx = 0; toneIdx < program.TonesAttributes.Count; toneIdx++) {
+                VabToneAttributes tone = program.TonesAttributes[toneIdx];
+                totalTones++;
+
+                if (tone.ProgramIndex != program.Index) {
+                    throw new FormatException(
+                        $"Unxpected program index in tone #{program.Index}/{toneIdx} -> {tone.ProgramIndex}");
+                }
+
+                if (tone.WaveformIndex < 0 || tone.WaveformIndex >= sectionsInfo.WaveformCount) {
+                    throw new FormatException($"Unexpected waveform index in tone #{program.Index}/{toneIdx}");
+                }
+            }
+        }
+
+        if (totalTones != sectionsInfo.TotalToneCount) {
+            throw new FormatException(
+                $"Unexpected count of tones. " +
+                $"Read: {totalTones}. Header: {sectionsInfo.TotalToneCount}");
+        }
+
+        int actualSize = format.GetVabSize();
+        if (actualSize != sectionsInfo.FullSize) {
+            throw new FormatException(
+                $"Unexpected VAB size. " +
+                $"Expected: {actualSize}. Header: {sectionsInfo.FullSize}");
+        }
+    }
+
+    private sealed record SectionsInfo(
+        int FullSize,
+        int ProgramCount,
+        int TotalToneCount,
+        int WaveformCount);
 }

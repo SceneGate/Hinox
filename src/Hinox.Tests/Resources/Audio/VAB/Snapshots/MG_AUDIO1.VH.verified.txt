@@ -1,0 +1,58 @@
+﻿{
+  Version: 0x5,
+  VabId: 0x0,
+  Reserved0: 0x0,
+  MasterVolume: 0x7F,
+  MasterPan: 0x40,
+  BankAttribute1: 0x0,
+  BankAttribute2: 0x0,
+  Reserved1: 0x0,
+  ProgramsAttributes: [
+    {
+      Index: 0,
+      MasterVolume: 127,
+      Priority: 0,
+      Mode: 224,
+      MasterPanning: 64,
+      Reserved0: 0,
+      Attributes: 0,
+      Reserved1: 0,
+      Reserved2: 0,
+      TonesAttributes: [
+        {
+          Priority: 0,
+          Mode: 0,
+          Volume: 127,
+          Panning: 64,
+          Centre: 64,
+          Shift: 0,
+          Minimum: 0,
+          Maximum: 127,
+          VibW: 0,
+          VibT: 0,
+          PorW: 0,
+          PorT: 0,
+          PbMin: 2,
+          PbMax: 2,
+          Reserved0: 0,
+          Reserved1: 0,
+          Adsr1: -32513,
+          Adsr2: 0,
+          ProgramIndex: 0,
+          WaveformIndex: 0,
+          Reserved2: 0
+        }
+      ]
+    }
+  ],
+  WaveformSizes: [
+    3376,
+    15776,
+    5104,
+    18048,
+    46944,
+    20784,
+    75360,
+    9088
+  ]
+}

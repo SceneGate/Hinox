@@ -1,7 +1,6 @@
 ﻿{
   Version: 0x7,
   VabId: 0x0,
-  FullSize: 0x24EB0,
   Reserved0: 0xEEEE,
   MasterVolume: 0x7F,
   MasterPan: 0x40,
@@ -10,6 +9,7 @@
   Reserved1: 0xFFFFFFFF,
   ProgramsAttributes: [
     {
+      Index: 0,
       MasterVolume: 127,
       Priority: 255,
       Mode: 255,
@@ -390,6 +390,7 @@
       ]
     },
     {
+      Index: 1,
       MasterVolume: 127,
       Priority: 255,
       Mode: 255,
