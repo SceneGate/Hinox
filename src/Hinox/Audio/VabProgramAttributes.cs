@@ -4,6 +4,11 @@ using System.Collections.ObjectModel;
 
 public class VabProgramAttributes
 {
+    /// <summary>
+    /// Gets or sets the index of the program in the VAB format.
+    /// </summary>
+    public int Index { get; set; }
+
     public byte MasterVolume { get; set; }
 
     public byte Priority { get; set; }
