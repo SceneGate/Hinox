@@ -1,0 +1,7 @@
+**/*.vh
+
+# RE1
+**/*.hed
+
+# Ignore repeated files
+!Snapshots/*.*
