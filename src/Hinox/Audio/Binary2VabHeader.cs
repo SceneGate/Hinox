@@ -36,30 +36,25 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
                 continue;
             }
 
-            programsRead++;
-            header.ProgramsAttributes.Add(program);
-
-            source.Stream.Position = 0x820 + (0x20 * tonesRead);
+            source.Stream.Position = 0x820 + (0x200 * programsRead);
             for (int t = 0; t < toneCount; t++) {
+                // After program tones, it keeps saying it's for the same program but they are empty only some fields set
                 VabToneAttributes tone = ReadToneAttributes(reader);
-                if (tone.WaveformIndex == 0) {
-                    // After program tones, it keeps saying it's for the same program but they are empty only some fields set
-                    tonesRead++;
-                    t--;
-                    continue;
-                }
 
                 if (tone.ProgramIndex != p) {
                     throw new FormatException($"Invalid program index in tone #{p}/{t} -> {tone.ProgramIndex}");
                 }
 
-                if (tone.WaveformIndex >= sectionsInfo.WaveformCount) {
+                if (tone.WaveformIndex < 0 || tone.WaveformIndex >= sectionsInfo.WaveformCount) {
                     throw new FormatException($"Invalid waveform index in tone #{p}/{t}");
                 }
 
                 program.TonesAttributes.Add(tone);
                 tonesRead++;
             }
+
+            programsRead++;
+            header.ProgramsAttributes.Add(program);
         }
 
         if (header.ProgramsAttributes.Sum(p => p.TonesAttributes.Count) != sectionsInfo.TotalToneCount) {
@@ -67,8 +62,10 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
                 $"Invalid count of tones. Read: {tonesRead}, from header: {sectionsInfo.TotalToneCount}");
         }
 
+        reader.Stream.Position = 0x820 + (0x200 * sectionsInfo.ProgramCount);
+        reader.ReadUInt16(); // skip fist always 0 (because 1-based indexes)
         for (int i = 0; i < sectionsInfo.WaveformCount; i++) {
-            ushort audioSize = reader.ReadUInt16();
+            int audioSize = reader.ReadUInt16() << 3;
             header.WaveformSizes.Add(audioSize);
         }
 
@@ -93,7 +90,7 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
 
         int programCount = reader.ReadUInt16();
         int toneCount = reader.ReadUInt16();
-        int waveformCount = reader.ReadUInt16() + 1;
+        int waveformCount = reader.ReadUInt16();
 
         header.MasterVolume = reader.ReadByte();
         header.MasterPan = reader.ReadByte();
@@ -144,7 +141,7 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         tone.Adsr1 = reader.ReadInt16();
         tone.Adsr2 = reader.ReadInt16();
         tone.ProgramIndex = reader.ReadInt16();
-        tone.WaveformIndex = reader.ReadInt16();
+        tone.WaveformIndex = (short)(reader.ReadInt16() - 1); // 1-based index
         tone.Reserved2 = reader.ReadInt64();
 
         return tone;

@@ -6,8 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using SceneGate.Hinox.Audio;
+using SceneGate.Hinox.Tests.Framework;
 using VerifyNUnit;
-using VerifyTests;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 
@@ -57,7 +57,10 @@ public class Binary2VabHeaderTests
         Verifier.UseProjectRelativeDirectory("Resources/Audio/VAB/Snapshots");
         return Verifier.Verify(actual)
             .UseFileName(relativePath)
-            .AddExtraSettings(x => x.DefaultValueHandling = Argon.DefaultValueHandling.Include);
+            .AddExtraSettings(x => {
+                x.DefaultValueHandling = Argon.DefaultValueHandling.Include;
+                x.Converters.Add(new HexadecimalVerifierJsonConverter<VabHeader>());
+            });
     }
 
     [TestCaseSource(nameof(GetAllVhTestFiles))]

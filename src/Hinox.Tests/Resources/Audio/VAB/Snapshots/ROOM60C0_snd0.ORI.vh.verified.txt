@@ -1,13 +1,13 @@
 ﻿{
-  Version: 7,
-  VabId: 0,
-  FullSize: 151216,
-  Reserved0: -4370,
-  MasterVolume: 127,
-  MasterPan: 64,
-  BankAttribute1: 0,
-  BankAttribute2: 0,
-  Reserved1: -1,
+  Version: 0x7,
+  VabId: 0x0,
+  FullSize: 0x24EB0,
+  Reserved0: 0xEEEE,
+  MasterVolume: 0x7F,
+  MasterPan: 0x40,
+  BankAttribute1: 0x0,
+  BankAttribute2: 0x0,
+  Reserved1: 0xFFFFFFFF,
   ProgramsAttributes: [
     {
       MasterVolume: 127,
@@ -39,7 +39,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 1,
+          WaveformIndex: 0,
           Reserved2: 54888453694881984
         },
         {
@@ -62,7 +62,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 5,
+          WaveformIndex: 4,
           Reserved2: 54888453694881984
         },
         {
@@ -85,7 +85,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 4,
+          WaveformIndex: 3,
           Reserved2: 54888453694881984
         },
         {
@@ -108,7 +108,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 6,
+          WaveformIndex: 5,
           Reserved2: 54888453694881984
         },
         {
@@ -131,7 +131,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 15,
+          WaveformIndex: 14,
           Reserved2: 54888453694881984
         },
         {
@@ -154,7 +154,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 15,
+          WaveformIndex: 14,
           Reserved2: 54888453694881984
         },
         {
@@ -177,7 +177,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 3,
+          WaveformIndex: 2,
           Reserved2: 54888453694881984
         },
         {
@@ -200,7 +200,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 7,
+          WaveformIndex: 6,
           Reserved2: 54888453694881984
         },
         {
@@ -223,7 +223,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 7,
+          WaveformIndex: 6,
           Reserved2: 54888453694881984
         },
         {
@@ -246,7 +246,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 6,
+          WaveformIndex: 5,
           Reserved2: 54888453694881984
         },
         {
@@ -269,7 +269,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 22,
+          WaveformIndex: 21,
           Reserved2: 54888453694881984
         },
         {
@@ -292,7 +292,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 1,
+          WaveformIndex: 0,
           Reserved2: 54888453694881984
         },
         {
@@ -315,7 +315,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 14,
+          WaveformIndex: 13,
           Reserved2: 54888453694881984
         },
         {
@@ -338,7 +338,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 12,
+          WaveformIndex: 11,
           Reserved2: 54888453694881984
         },
         {
@@ -361,7 +361,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 10,
+          WaveformIndex: 9,
           Reserved2: 54888453694881984
         },
         {
@@ -384,7 +384,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 0,
-          WaveformIndex: 11,
+          WaveformIndex: 10,
           Reserved2: 54888453694881984
         }
       ]
@@ -419,7 +419,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 1,
-          WaveformIndex: 1,
+          WaveformIndex: 0,
           Reserved2: 54888453694881984
         },
         {
@@ -442,7 +442,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 1,
-          WaveformIndex: 9,
+          WaveformIndex: 8,
           Reserved2: 54888453694881984
         },
         {
@@ -465,7 +465,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 1,
-          WaveformIndex: 17,
+          WaveformIndex: 16,
           Reserved2: 54888453694881984
         },
         {
@@ -488,7 +488,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 1,
-          WaveformIndex: 1,
+          WaveformIndex: 0,
           Reserved2: 54888453694881984
         },
         {
@@ -511,7 +511,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 1,
-          WaveformIndex: 16,
+          WaveformIndex: 15,
           Reserved2: 54888453694881984
         },
         {
@@ -534,7 +534,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 1,
-          WaveformIndex: 18,
+          WaveformIndex: 17,
           Reserved2: 54888453694881984
         },
         {
@@ -557,7 +557,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 1,
-          WaveformIndex: 19,
+          WaveformIndex: 18,
           Reserved2: 54888453694881984
         },
         {
@@ -580,7 +580,7 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 1,
-          WaveformIndex: 20,
+          WaveformIndex: 19,
           Reserved2: 54888453694881984
         },
         {
@@ -603,35 +603,34 @@
           Adsr1: -32513,
           Adsr2: 8128,
           ProgramIndex: 1,
-          WaveformIndex: 21,
+          WaveformIndex: 20,
           Reserved2: 54888453694881984
         }
       ]
     }
   ],
   WaveformSizes: [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    45745,
-    33023,
-    24512,
-    1,
-    0,
-    192,
-    193,
-    194,
-    195,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    48,
+    2560,
+    4288,
+    3360,
+    3296,
+    3840,
+    2352,
+    5824,
+    6144,
+    8432,
+    8944,
+    35808,
+    8944,
+    2672,
+    1504,
+    5152,
+    6784,
+    6928,
+    2800,
+    1456,
+    1024,
+    25440
   ]
 }
