@@ -36,7 +36,7 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
 
     private static void WriteHeader(DataWriter writer, VabHeader format)
     {
-        int programCount = format.ProgramsAttributes.Count;
+        int programCount = format.ProgramsAttributes.Count(p => p.TonesAttributes.Count > 0);
         int toneCount = format.ProgramsAttributes.Sum(p => p.TonesAttributes.Count);
         int waveformsCount = format.WaveformSizes.Count;
 
@@ -64,17 +64,11 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
             throw new FormatException("First program must have index 0");
         }
 
-        VabProgramAttributes lastProgram = format.ProgramsAttributes[0];
         foreach (VabProgramAttributes program in format.ProgramsAttributes) {
-            int missingPrograms = program.Index - 1 - lastProgram.Index;
-            for (int m = 0; m < missingPrograms; m++) {
-                WriteEmptyProgramAttributes(writer, format.Version, lastProgram);
-            }
-
             WriteProgramAttributes(writer, program);
-            lastProgram = program;
         }
 
+        VabProgramAttributes lastProgram = format.ProgramsAttributes[^1];
         int finalEmptyCount = VabHeader.MaximumPrograms - (lastProgram.Index + 1);
         for (int m = 0; m < finalEmptyCount; m++) {
             WriteEmptyProgramAttributes(writer, format.Version, lastProgram);
@@ -138,16 +132,16 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
         writer.Write(tone.Fine);
         writer.Write(tone.Minimum);
         writer.Write(tone.Maximum);
-        writer.Write(tone.VibW);
-        writer.Write(tone.VibT);
-        writer.Write(tone.PorW);
-        writer.Write(tone.PorT);
-        writer.Write(tone.PbMin);
-        writer.Write(tone.PbMax);
+        writer.Write(tone.VibrationWidth);
+        writer.Write(tone.VibrationTime);
+        writer.Write(tone.PortamentoWidth);
+        writer.Write(tone.PortamentoTime);
+        writer.Write(tone.PitchBendMinimum);
+        writer.Write(tone.PitchBendMaximum);
         writer.Write(tone.Reserved0);
         writer.Write(tone.Reserved1);
-        writer.Write(tone.Adsr1);
-        writer.Write(tone.Adsr2);
+        writer.Write(tone.EnvelopeSettings1);
+        writer.Write(tone.EnvelopeSettings2);
         writer.Write(tone.ProgramIndex);
         writer.Write((ushort)(tone.WaveformIndex + 1));
         writer.Write(tone.Reserved2);
@@ -167,20 +161,20 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
             writer.Write(reference.Fine);
             writer.Write((byte)0); // min
             writer.Write((byte)0); // max
-            writer.Write(reference.VibW);
-            writer.Write(reference.VibT);
-            writer.Write(reference.PorW);
-            writer.Write(reference.PorT);
-            writer.Write(reference.PbMin);
-            writer.Write(reference.PbMax);
+            writer.Write(reference.VibrationWidth);
+            writer.Write(reference.VibrationTime);
+            writer.Write(reference.PortamentoWidth);
+            writer.Write(reference.PortamentoTime);
+            writer.Write(reference.PitchBendMinimum);
+            writer.Write(reference.PitchBendMaximum);
         }
 
         writer.Write(reference.Reserved0);
         writer.Write(reference.Reserved1);
 
         if (version == 5) {
-            writer.Write(reference.Adsr1);
-            writer.Write(reference.Adsr2);
+            writer.Write(reference.EnvelopeSettings1);
+            writer.Write(reference.EnvelopeSettings2);
         } else if (version == 6) {
             writer.Write((uint)0);
         } else if (version >= 7) {

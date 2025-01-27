@@ -3,5 +3,6 @@
 # RE1
 **/*.hed
 
-# Ignore repeated files
-!Snapshots/*.*
+# Ignore repeated or failed files
+!Snapshots/**/*
+!Failed/**/*

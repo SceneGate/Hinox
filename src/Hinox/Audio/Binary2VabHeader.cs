@@ -68,21 +68,26 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
     private static void ReadProgramsWithAttributes(DataReader reader, VabHeader header, SectionsInfo sectionsInfo)
     {
         int programIdx = -1;
-        while (header.ProgramsAttributes.Count < sectionsInfo.ProgramCount) {
+        int validProgramsCount = 0;
+        while (validProgramsCount < sectionsInfo.ProgramCount) {
             programIdx++;
-            reader.Stream.Position = VabHeader.HeaderSize + (programIdx * VabHeader.ProgramAttributesSize);
 
-            VabProgramAttributes program = ReadProgramAttributes(reader, out int toneCount);
+            int relativeOffset = programIdx * VabHeader.ProgramAttributesSize;
+            reader.Stream.Position = VabHeader.HeaderSize + relativeOffset;
+
+            var program = ReadProgramAttributes(reader, out int toneCount);
             program.Index = programIdx;
+            header.ProgramsAttributes.Add(program);
 
-            // Between programs, some info are empty and doesn't count toward count in header
+            // Between programs, some info are empty and doesn't count toward
+            // count in header. Also added as their attributes are not constant
+            // so it can generate an identical file later.
             if (toneCount == 0) {
                 continue;
             }
 
-            int readPrograms = header.ProgramsAttributes.Count;
-            reader.Stream.Position = VabHeader.TonesAttributesOffset
-                + (VabHeader.TonesSectionSizePerProgram * readPrograms);
+            int toneRelativeOffset = VabHeader.TonesSectionSizePerProgram * validProgramsCount;
+            reader.Stream.Position = VabHeader.TonesAttributesOffset + toneRelativeOffset;
 
             for (int toneIdx = 0; toneIdx < toneCount; toneIdx++) {
                 // NOTE: A program has always 16 tones but the remaining ones will be empty
@@ -90,7 +95,7 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
                 program.TonesAttributes.Add(tone);
             }
 
-            header.ProgramsAttributes.Add(program);
+            validProgramsCount++;
         }
     }
 
@@ -123,16 +128,16 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         tone.Fine = reader.ReadByte();
         tone.Minimum = reader.ReadByte();
         tone.Maximum = reader.ReadByte();
-        tone.VibW = reader.ReadByte();
-        tone.VibT = reader.ReadByte();
-        tone.PorW = reader.ReadByte();
-        tone.PorT = reader.ReadByte();
-        tone.PbMin = reader.ReadByte();
-        tone.PbMax = reader.ReadByte();
+        tone.VibrationWidth = reader.ReadByte();
+        tone.VibrationTime = reader.ReadByte();
+        tone.PortamentoWidth = reader.ReadByte();
+        tone.PortamentoTime = reader.ReadByte();
+        tone.PitchBendMinimum = reader.ReadByte();
+        tone.PitchBendMaximum = reader.ReadByte();
         tone.Reserved0 = reader.ReadByte();
         tone.Reserved1 = reader.ReadByte();
-        tone.Adsr1 = reader.ReadInt16();
-        tone.Adsr2 = reader.ReadInt16();
+        tone.EnvelopeSettings1 = reader.ReadInt16();
+        tone.EnvelopeSettings2 = reader.ReadInt16();
         tone.ProgramIndex = reader.ReadInt16();
         tone.WaveformIndex = (short)(reader.ReadInt16() - 1); // 1-based index
         tone.Reserved2 = reader.ReadInt64();

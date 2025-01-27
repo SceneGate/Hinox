@@ -49,32 +49,32 @@ public class VabToneAttributes
     /// <summary>
     /// Gets or sets the vibration width.
     /// </summary>
-    public byte VibW { get; set; }
+    public byte VibrationWidth { get; set; }
 
     /// <summary>
     /// Gets or sets the vibration duration.
     /// </summary>
-    public byte VibT { get; set; }
+    public byte VibrationTime { get; set; }
 
     /// <summary>
     /// Gets or sets the portamento width.
     /// </summary>
-    public byte PorW { get; set; }
+    public byte PortamentoWidth { get; set; }
 
     /// <summary>
     /// Gets or sets the portamento duration.
     /// </summary>
-    public byte PorT { get; set; }
+    public byte PortamentoTime { get; set; }
 
     /// <summary>
     /// Gets or sets the minimum pitch bend.
     /// </summary>
-    public byte PbMin { get; set; }
+    public byte PitchBendMinimum { get; set; }
 
     /// <summary>
     /// Gets or sets the maximum pitch bend.
     /// </summary>
-    public byte PbMax { get; set; }
+    public byte PitchBendMaximum { get; set; }
 
     /// <summary>
     /// Gets or sets a reserved field at position 0xE.
@@ -87,17 +87,18 @@ public class VabToneAttributes
     public byte Reserved1 { get; set; }
 
     /// <summary>
-    /// Gets or sets the settings for attack and decay.
+    /// Gets or sets the envelope settings for attack and decay.
     /// </summary>
-    public short Adsr1 { get; set; }
+    public short EnvelopeSettings1 { get; set; }
 
     /// <summary>
-    /// Gets or sets the settings for release and sustain.
+    /// Gets or sets the envelope settings for release and sustain.
     /// </summary>
-    public short Adsr2 { get; set; }
+    public short EnvelopeSettings2 { get; set; }
 
     /// <summary>
-    /// Gets or sets the 0-based index of the program of the tone.
+    /// Gets or sets the 0-based index of the program of the tone
+    /// in the serialized binary format.
     /// </summary>
     public short ProgramIndex { get; set; }
 
