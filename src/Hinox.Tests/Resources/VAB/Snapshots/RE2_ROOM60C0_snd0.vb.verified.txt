@@ -1,0 +1,244 @@
+﻿[
+  {
+    Format: {
+      Offset: 0x0,
+      Position: 0x0,
+      Length: 0x30,
+      SHA256: 4A6B20A637CDF77436FA98C9BFC335B109B787DDFA50FB687B2F394F4E70CBD6
+    },
+    Name: audio0000.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x30,
+      Position: 0x0,
+      Length: 0xA00,
+      SHA256: 844BE9C0364225168F14FAD8DE911032F4CC83BFECB8C6E9E0B20144952489E8
+    },
+    Name: audio0001.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0xA30,
+      Position: 0x0,
+      Length: 0x10C0,
+      SHA256: 6EDAD0F2D5A93A452A33509124320EC139553EFC2615D575FB475DF67FCF46B7
+    },
+    Name: audio0002.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x1AF0,
+      Position: 0x0,
+      Length: 0xD20,
+      SHA256: C1B8BDA18591FFEF9D4B9F84EC171974F0250780412C8AD97D4E0A58E457E9F6
+    },
+    Name: audio0003.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x2810,
+      Position: 0x0,
+      Length: 0xCE0,
+      SHA256: CA76117EF548A47E0D65EC366EFC7FCD96754D59715F53615CB78162871EFAAA
+    },
+    Name: audio0004.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x34F0,
+      Position: 0x0,
+      Length: 0xF00,
+      SHA256: 6848133A99AD9AFD634EEB991E9798DE7C8F72E318D27A83919BBFB3740673B6
+    },
+    Name: audio0005.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x43F0,
+      Position: 0x0,
+      Length: 0x930,
+      SHA256: CC40262B305752D28CA54BFE7FAC7D5042DDFB6D218124A338A21F8A9A0B80ED
+    },
+    Name: audio0006.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x4D20,
+      Position: 0x0,
+      Length: 0x16C0,
+      SHA256: D9443254AFDDF86533ED023E99F3CB64C5404CA9BF0B13E63B43C0C80D0AAC82
+    },
+    Name: audio0007.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x63E0,
+      Position: 0x0,
+      Length: 0x1800,
+      SHA256: 8C2F88B8F105E11C0C14CCFDD58D035B5718B9F4C99A31EE7AFA4F77CEB511B5
+    },
+    Name: audio0008.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x7BE0,
+      Position: 0x0,
+      Length: 0x20F0,
+      SHA256: 510B4AEC1E2B687BFD196760CC80ECA261D85A77DD0BCF950F4963A22B9E8221
+    },
+    Name: audio0009.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x9CD0,
+      Position: 0x0,
+      Length: 0x22F0,
+      SHA256: 43461C37526ED8AC0BC45F56CCE17D386868B1C05A17CD00AB52FC16B09A8955
+    },
+    Name: audio0010.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0xBFC0,
+      Position: 0x0,
+      Length: 0x8BE0,
+      SHA256: DA69CACAB05A039EF4087EB077884B15D42DB4252CAEA8E900249B4287AC0839
+    },
+    Name: audio0011.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x14BA0,
+      Position: 0x0,
+      Length: 0x22F0,
+      SHA256: 43461C37526ED8AC0BC45F56CCE17D386868B1C05A17CD00AB52FC16B09A8955
+    },
+    Name: audio0012.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x16E90,
+      Position: 0x0,
+      Length: 0xA70,
+      SHA256: E4FA37D36D566F4CFF429F8490C76BA09DA76E36BD13082D3A57328AE4C4713D
+    },
+    Name: audio0013.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x17900,
+      Position: 0x0,
+      Length: 0x5E0,
+      SHA256: 12480EF5FAC1277CACD06B59975E755BF7670056179E938A891C0F9ECA607B5D
+    },
+    Name: audio0014.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x17EE0,
+      Position: 0x0,
+      Length: 0x1420,
+      SHA256: DDA9A22A36472B2C266CC6C4612A52611F3830F08D86ADC117054CA490C666E2
+    },
+    Name: audio0015.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x19300,
+      Position: 0x0,
+      Length: 0x1A80,
+      SHA256: EDC4B921AF94469AC29CC15CB3B597CAC399395F0857B87F4F20DE8804ABB788
+    },
+    Name: audio0016.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x1AD80,
+      Position: 0x0,
+      Length: 0x1B10,
+      SHA256: 16B3AB2B6B580E46706CF13A9395BA43C28717BC50076537A93C1B55144B473E
+    },
+    Name: audio0017.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x1C890,
+      Position: 0x0,
+      Length: 0xAF0,
+      SHA256: 146B20F4E4D4C875624808B017BFA6098E19AF0EA766DC01A5A5313B7AAA6745
+    },
+    Name: audio0018.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x1D380,
+      Position: 0x0,
+      Length: 0x5B0,
+      SHA256: 6AECD7A934172B1059F1A2CE98414C06E221E07A8F6B329E13F1C04E96123105
+    },
+    Name: audio0019.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x1D930,
+      Position: 0x0,
+      Length: 0x400,
+      SHA256: 1B2F0563CBDE02447E885855CAA6E1945E6A38BA8252B84C134B82B4368D1E7E
+    },
+    Name: audio0020.adpcm,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x1DD30,
+      Position: 0x0,
+      Length: 0x6360,
+      SHA256: 782C982C31BD339C52082855D1124519822623C327C45B02A3BB46E5A9252CCC
+    },
+    Name: audio0021.adpcm,
+    Children: null,
+    Tags: null
+  }
+]
