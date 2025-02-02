@@ -10,7 +10,7 @@ public class VabProgramAttributes
     /// <summary>
     /// Gets or sets the index of the program in the VAB format.
     /// </summary>
-    public int Index { get; set; }
+    public int Index { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets the master volume of the tones in the program.
@@ -25,7 +25,7 @@ public class VabProgramAttributes
     /// <summary>
     /// Gets or sets the mode.
     /// </summary>
-    public byte Mode { get; set; }
+    public byte Mode { get; set; } = 0xE0;
 
     /// <summary>
     /// Gets or sets the master panning.
@@ -45,12 +45,12 @@ public class VabProgramAttributes
     /// <summary>
     /// Gets or sets a reserved field at position 0x8.
     /// </summary>
-    public int Reserved1 { get; set; }
+    public int Reserved1 { get; set; } = -1;
 
     /// <summary>
     /// Gets or sets a reserved field at position 0xC.
     /// </summary>
-    public int Reserved2 { get; set; }
+    public int Reserved2 { get; set; } = -1;
 
     /// <summary>
     /// Gets the collection of tones attributes in the program.

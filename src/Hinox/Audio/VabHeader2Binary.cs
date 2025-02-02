@@ -57,10 +57,7 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
 
     private static void WriteProgramsAttributes(DataWriter writer, VabHeader format)
     {
-        if (format.ProgramsAttributes.Count == 0) {
-            throw new FormatException("At least one program is required");
-        }
-        if (format.ProgramsAttributes[0].Index != 0) {
+        if (format.ProgramsAttributes.Count > 0 && format.ProgramsAttributes[0].Index != 0) {
             throw new FormatException("First program must have index 0");
         }
 
@@ -68,7 +65,10 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
             WriteProgramAttributes(writer, program);
         }
 
-        VabProgramAttributes lastProgram = format.ProgramsAttributes[^1];
+        VabProgramAttributes lastProgram = format.ProgramsAttributes.Count == 0
+            ? new VabProgramAttributes() // constructor sets default properties
+            : format.ProgramsAttributes[^1];
+
         int finalEmptyCount = VabHeader.MaximumPrograms - (lastProgram.Index + 1);
         for (int m = 0; m < finalEmptyCount; m++) {
             WriteEmptyProgramAttributes(writer, format.Version, lastProgram);
