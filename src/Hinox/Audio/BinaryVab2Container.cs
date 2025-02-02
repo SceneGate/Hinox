@@ -16,7 +16,7 @@ public class BinaryVab2Container : IConverter<IBinary, NodeContainerFormat>
     {
         ArgumentNullException.ThrowIfNull(source);
 
-        using var binaryHeader = new BinaryFormat(source.Stream);
+        using var binaryHeader = new BinaryFormat(source.Stream, 0, source.Stream.Length);
         VabHeader header = new Binary2VabHeader().Convert(binaryHeader);
 
         int vbOffset = header.GetHeaderSize();
