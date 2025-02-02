@@ -79,18 +79,25 @@ public class VabHeader : IFormat
     public Collection<int> WaveformSizes { get; } = [];
 
     /// <summary>
+    /// Gets the size of the VH header format.
+    /// </summary>
+    /// <returns></returns>
+    public int GetHeaderSize()
+    {
+        int validPrograms = ProgramsAttributes.Count(p => p.TonesAttributes.Count > 0);
+        return HeaderSize
+            + ProgramsSectionSize
+            + (TonesSectionSizePerProgram * validPrograms)
+            + WaveformsSizeSectionSize;
+    }
+
+    /// <summary>
     /// Gets the full size of the VAB file (header and body).
     /// </summary>
     /// <returns>The full size of the VAB format.</returns>
     public int GetVabSize()
     {
-        int validPrograms = ProgramsAttributes.Count(p => p.TonesAttributes.Count > 0);
-        int headerSize = HeaderSize
-            + ProgramsSectionSize
-            + (TonesSectionSizePerProgram * validPrograms)
-            + WaveformsSizeSectionSize;
         int bodySize = WaveformSizes.Sum();
-
-        return headerSize + bodySize;
+        return GetHeaderSize() + bodySize;
     }
 }
