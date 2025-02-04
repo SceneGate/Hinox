@@ -2,11 +2,11 @@
 
 using System.ComponentModel;
 using System.Text;
-using Microsoft.VisualBasic;
+using Data.HashFunction;
+using Data.HashFunction.CRC;
 using SceneGate.Hinox.Audio;
 using Spectre.Console;
 using Spectre.Console.Cli;
-using YamlDotNet.Serialization;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 
@@ -88,10 +88,21 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
 
     private static void ExportAudios(Node container, string outputPath)
     {
-        foreach (Node audio in container.Children.Where(n => n.Name != "header")) {
-            string audioOutputPath = Path.Combine(outputPath, audio.Name + ".adpcm");
-            audio.Stream!.WriteTo(audioOutputPath);
+        var audios = container.Children.Where(n => n.Name != "header").ToArray();
+        for (int i = 0; i < audios.Length; i++) {
+            string audioName = GetAudioName(i, audios[i]);
+            string audioOutputPath = Path.Combine(outputPath, audioName);
+            audios[i].Stream!.WriteTo(audioOutputPath);
         }
+    }
+
+    private static string GetAudioName(int index, Node audio)
+    {
+        audio.Stream!.Position = 0;
+
+        ICRC crc = CRCFactory.Instance.Create(CRCConfig.CRC32);
+        IHashValue hash = crc.ComputeHash(audio.Stream);
+        return $"{index:D4}_{hash.AsHexString().ToUpperInvariant()}.adpcm";
     }
 
     private static Node ReadContainer(Settings settings)
