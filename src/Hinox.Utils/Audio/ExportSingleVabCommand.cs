@@ -78,14 +78,11 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
 
     private static void ExportHeader(Node container, string outputPath)
     {
-        VabHeader header = container.Children["header"]!.GetFormatAs<VabHeader>()!;
-
-        string yaml = new SerializerBuilder()
-            .Build()
-            .Serialize(header);
+        string yaml = VabInfo.CreateFromContainer(container, ".adpcm")
+            .ToYaml();
 
         Directory.CreateDirectory(outputPath);
-        string fileOutputPath = Path.Combine(outputPath, "header.yml");
+        string fileOutputPath = Path.Combine(outputPath, "vab.yml");
         File.WriteAllText(fileOutputPath, yaml, Encoding.UTF8);
     }
 
