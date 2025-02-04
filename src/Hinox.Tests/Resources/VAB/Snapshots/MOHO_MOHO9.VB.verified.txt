@@ -6,7 +6,7 @@
       Length: 0x13F0,
       SHA256: 16F2F6948283A2579FDF4BA16F3B63251B045B46CC1ADC95AE2477C5C17B2E88
     },
-    Name: audio0000.adpcm,
+    Name: audio0000,
     Children: null,
     Tags: null
   },
@@ -17,7 +17,7 @@
       Length: 0x2190,
       SHA256: 0BDF5FAAAC23E4B58B45A64B3548657E65A1D947EE12D0849CBC3F0F2918640E
     },
-    Name: audio0001.adpcm,
+    Name: audio0001,
     Children: null,
     Tags: null
   },
@@ -28,7 +28,7 @@
       Length: 0x4DA0,
       SHA256: DC4EA9EDC82A530DBC491160FF499DBD5BF6C0FEFCEF0CBB8F3FD4ECB7F91DE3
     },
-    Name: audio0002.adpcm,
+    Name: audio0002,
     Children: null,
     Tags: null
   },
@@ -39,7 +39,7 @@
       Length: 0x2550,
       SHA256: 63A9D7D405E6748FB25A498A4DFF37EA1C03D4295CBCE62D329A7AA848CEB884
     },
-    Name: audio0003.adpcm,
+    Name: audio0003,
     Children: null,
     Tags: null
   },
@@ -50,7 +50,7 @@
       Length: 0x36F0,
       SHA256: 4585E2687C8E0408F3ED91DEC5BF8ADB4AFD8D9BE5EA53A6F7621FD7269A8725
     },
-    Name: audio0004.adpcm,
+    Name: audio0004,
     Children: null,
     Tags: null
   },
@@ -61,7 +61,7 @@
       Length: 0x1D90,
       SHA256: 92EF05FFD148DCF3C75CBDD3EA6D18B27573CC92ECD355F22DB1FCB2C3957AE5
     },
-    Name: audio0005.adpcm,
+    Name: audio0005,
     Children: null,
     Tags: null
   },
@@ -72,7 +72,7 @@
       Length: 0x3490,
       SHA256: 58423EA574895BF028CD1D87A3B4C5AE5B7B4914B4DD6AA3DD416C58EB1CAC1F
     },
-    Name: audio0006.adpcm,
+    Name: audio0006,
     Children: null,
     Tags: null
   },
@@ -83,7 +83,7 @@
       Length: 0x10B0,
       SHA256: BA76B25AD4CD7C1309D8AC4F9D821D4BC1B4181D530E651FA97A791857D2529F
     },
-    Name: audio0007.adpcm,
+    Name: audio0007,
     Children: null,
     Tags: null
   },
@@ -94,7 +94,7 @@
       Length: 0x14A0,
       SHA256: A7871E5B21E3582CBFCF728D93C6FA8E3C06B8124967E65274ED52A6F5EBB49A
     },
-    Name: audio0008.adpcm,
+    Name: audio0008,
     Children: null,
     Tags: null
   },
@@ -105,7 +105,7 @@
       Length: 0x1E90,
       SHA256: EEE64C1CC04FC7307930841756CCE4A40F9CB1FA04192449BEB6470F92E183E3
     },
-    Name: audio0009.adpcm,
+    Name: audio0009,
     Children: null,
     Tags: null
   },
@@ -116,7 +116,7 @@
       Length: 0x21E0,
       SHA256: 202C01F3CA135C9EFA185F52C05A3E7FC2EAE1E48DC19A24D634FF651054E5B7
     },
-    Name: audio0010.adpcm,
+    Name: audio0010,
     Children: null,
     Tags: null
   },
@@ -127,7 +127,7 @@
       Length: 0x2010,
       SHA256: 287B3E100A492951690E779DF20A2E819107ADBB3BA1889B2ACE935717588490
     },
-    Name: audio0011.adpcm,
+    Name: audio0011,
     Children: null,
     Tags: null
   },
@@ -138,7 +138,7 @@
       Length: 0xFC0,
       SHA256: C4F3A4597BC33DF95850A1D7A27EEF641B3807378CCBAAAD4E7960B821F7826C
     },
-    Name: audio0012.adpcm,
+    Name: audio0012,
     Children: null,
     Tags: null
   },
@@ -149,7 +149,7 @@
       Length: 0x3990,
       SHA256: 085E591092928DAB9A56D4576C12AD3DC8D6CC2F066EE6FBCC3DFA05663A05BD
     },
-    Name: audio0013.adpcm,
+    Name: audio0013,
     Children: null,
     Tags: null
   },
@@ -160,7 +160,7 @@
       Length: 0x30B0,
       SHA256: ABC15AEFCDAF76C35F3B723C594CFB760D5A1521BA222E12EBD74EDC9CC46830
     },
-    Name: audio0014.adpcm,
+    Name: audio0014,
     Children: null,
     Tags: null
   },
@@ -171,7 +171,7 @@
       Length: 0x1500,
       SHA256: 466DBFAE0CC8D0E17634040561618D6635642E424BFE693507139437D6640E20
     },
-    Name: audio0015.adpcm,
+    Name: audio0015,
     Children: null,
     Tags: null
   },
@@ -182,7 +182,7 @@
       Length: 0x1240,
       SHA256: 5DAB713AAF9F3964EFEF699381253652F0ABCF025992C6A8DB9F3AF1F83B1966
     },
-    Name: audio0016.adpcm,
+    Name: audio0016,
     Children: null,
     Tags: null
   },
@@ -193,7 +193,7 @@
       Length: 0x1FB0,
       SHA256: A5D3667CB3D91024DC2F9F6F13732BAE3CF277B62E8AE5293AB1C0378D1E9D34
     },
-    Name: audio0017.adpcm,
+    Name: audio0017,
     Children: null,
     Tags: null
   },
@@ -204,7 +204,7 @@
       Length: 0x1510,
       SHA256: 0A1DACCC69DDABB5645A6CF8AE57774BC42ED894549B23660112674075E69C27
     },
-    Name: audio0018.adpcm,
+    Name: audio0018,
     Children: null,
     Tags: null
   },
@@ -215,7 +215,7 @@
       Length: 0x1240,
       SHA256: E59DEE8CFFC9313216B825293FA0FD13801B8D8A465F26478A8CAB5A207FF693
     },
-    Name: audio0019.adpcm,
+    Name: audio0019,
     Children: null,
     Tags: null
   },
@@ -226,7 +226,7 @@
       Length: 0x68B0,
       SHA256: 66706B07BFE4B670A03C102FB7800A132B70822956707352DA0054EED547C68E
     },
-    Name: audio0020.adpcm,
+    Name: audio0020,
     Children: null,
     Tags: null
   },
@@ -237,7 +237,7 @@
       Length: 0x6FB0,
       SHA256: 1F95B748CC3085B5AB6BC8BA12A78E2088FCA1A7911F68EC4079FEBB9E0CC2B9
     },
-    Name: audio0021.adpcm,
+    Name: audio0021,
     Children: null,
     Tags: null
   },
@@ -248,7 +248,7 @@
       Length: 0x44B0,
       SHA256: 5747774A340793C900A15DC305A15EFE714FE4721D17DE8D5F49C398AAEA5D8F
     },
-    Name: audio0022.adpcm,
+    Name: audio0022,
     Children: null,
     Tags: null
   },
@@ -259,7 +259,7 @@
       Length: 0x2F20,
       SHA256: FAB2A277EE1EEF2D80ED0894B6A27760D3AD399959A8C4012576C16753A9EE55
     },
-    Name: audio0023.adpcm,
+    Name: audio0023,
     Children: null,
     Tags: null
   },
@@ -270,7 +270,7 @@
       Length: 0x2BE0,
       SHA256: 30E4FE5E5ABED44BA757808A6F8E9E53175D2C42512DB7BF99137EB9CAF02DE6
     },
-    Name: audio0024.adpcm,
+    Name: audio0024,
     Children: null,
     Tags: null
   },
@@ -281,7 +281,7 @@
       Length: 0x3940,
       SHA256: 96A10287E8A447CEA3B9EEE27CE986448386D30EB02522F796F93E6285BBD446
     },
-    Name: audio0025.adpcm,
+    Name: audio0025,
     Children: null,
     Tags: null
   },
@@ -292,7 +292,7 @@
       Length: 0x7020,
       SHA256: 0F8D2836529473C48775AE38F654AF16A88F4323E703C1DAD51BF957C53821F7
     },
-    Name: audio0026.adpcm,
+    Name: audio0026,
     Children: null,
     Tags: null
   },
@@ -303,7 +303,7 @@
       Length: 0x4B90,
       SHA256: BAC55FADB670AB85BD70803408C1D3CA8112F04461AFF49727CB78D4203A6735
     },
-    Name: audio0027.adpcm,
+    Name: audio0027,
     Children: null,
     Tags: null
   },
@@ -314,7 +314,7 @@
       Length: 0x42B0,
       SHA256: F1CCEBCF23B4469EF084880ADFFE4C3D6B17141DE2A121A2315ED68D92C92488
     },
-    Name: audio0028.adpcm,
+    Name: audio0028,
     Children: null,
     Tags: null
   },
@@ -325,7 +325,7 @@
       Length: 0x12A0,
       SHA256: AEE24292C8128A4940F9CB845604E70E54149EB22376B418E6C43C09E5503B25
     },
-    Name: audio0029.adpcm,
+    Name: audio0029,
     Children: null,
     Tags: null
   },
@@ -336,7 +336,7 @@
       Length: 0x14C0,
       SHA256: 8FCD7FE35C89C0D82914CD2161D05EEF637661D1B85F98DE8C5FCAF3BDC068C0
     },
-    Name: audio0030.adpcm,
+    Name: audio0030,
     Children: null,
     Tags: null
   },
@@ -347,7 +347,7 @@
       Length: 0x11B0,
       SHA256: 6BD418BE6A81F474FE500E8EC8F5322E3E2C9D62CE0EBC7C38B551BE1DAC953E
     },
-    Name: audio0031.adpcm,
+    Name: audio0031,
     Children: null,
     Tags: null
   },
@@ -358,7 +358,7 @@
       Length: 0x1260,
       SHA256: 4262292C5ECAA552050557E79C2900E97DB1D372A30FC2BEC162B83867D2E38B
     },
-    Name: audio0032.adpcm,
+    Name: audio0032,
     Children: null,
     Tags: null
   },
@@ -369,7 +369,7 @@
       Length: 0x1160,
       SHA256: F0387541230F25F7C2C4FD2AA17071FA6299377CEAF1C9709FDC9FFFAE0C5761
     },
-    Name: audio0033.adpcm,
+    Name: audio0033,
     Children: null,
     Tags: null
   },
@@ -380,7 +380,7 @@
       Length: 0x2C20,
       SHA256: 1F5A51A6AB927E60964FFDDFDAE657164C3D9F122662746EECA3398BAF8567C7
     },
-    Name: audio0034.adpcm,
+    Name: audio0034,
     Children: null,
     Tags: null
   },
@@ -391,7 +391,7 @@
       Length: 0x2980,
       SHA256: E8FC925BCBC548FA481386CB9AF99EBEE9271F2BD637B23E53EADE8E331AA825
     },
-    Name: audio0035.adpcm,
+    Name: audio0035,
     Children: null,
     Tags: null
   },
@@ -402,7 +402,7 @@
       Length: 0x3040,
       SHA256: 10F35F3DA4AF4B7BA385F1E110C84D385FA71C8BEC8AC39539CF62B85F068E0C
     },
-    Name: audio0036.adpcm,
+    Name: audio0036,
     Children: null,
     Tags: null
   },
@@ -413,7 +413,7 @@
       Length: 0x20F0,
       SHA256: FBD0F3025D6F9FDE6E62371FE9F723E1260D32C03E0EE5B965170630ECA56967
     },
-    Name: audio0037.adpcm,
+    Name: audio0037,
     Children: null,
     Tags: null
   },
@@ -424,7 +424,7 @@
       Length: 0x1330,
       SHA256: 756BAAD951AB6CB9F46055B6ECE0FF4D018B596E9D13A024873164C6AC986B90
     },
-    Name: audio0038.adpcm,
+    Name: audio0038,
     Children: null,
     Tags: null
   },
@@ -435,7 +435,7 @@
       Length: 0x1460,
       SHA256: 8B9617A2B2AD1DC1B253FE2491C6B699E296CD9920696787BF4C6EFFF1B06E90
     },
-    Name: audio0039.adpcm,
+    Name: audio0039,
     Children: null,
     Tags: null
   },
@@ -446,7 +446,7 @@
       Length: 0x1600,
       SHA256: B6470B50A66971759F853369544D3814C1438F8062FFF4E8B7222E735F1D7B8A
     },
-    Name: audio0040.adpcm,
+    Name: audio0040,
     Children: null,
     Tags: null
   },
@@ -457,7 +457,7 @@
       Length: 0x1A40,
       SHA256: C98BF0D29D5BD5912E64AC066A41D1EEC898B9277BF159FAD403FED43C2EDA56
     },
-    Name: audio0041.adpcm,
+    Name: audio0041,
     Children: null,
     Tags: null
   },
@@ -468,7 +468,7 @@
       Length: 0x1510,
       SHA256: CC5DAF581575B9CB93372D6D29BC629515359216AB32FA928902B7641A3E969F
     },
-    Name: audio0042.adpcm,
+    Name: audio0042,
     Children: null,
     Tags: null
   },
@@ -479,7 +479,7 @@
       Length: 0x2980,
       SHA256: 235493AB38BA6F2A4C87F15370C7B8EEAB4E479037C3E68E8B93D38F62690FBB
     },
-    Name: audio0043.adpcm,
+    Name: audio0043,
     Children: null,
     Tags: null
   },
@@ -490,7 +490,7 @@
       Length: 0x1AB0,
       SHA256: C8A7AF2DBF236D078A234E070A0F395484812DBEDE9EBA679128E3ABCAF25BC0
     },
-    Name: audio0044.adpcm,
+    Name: audio0044,
     Children: null,
     Tags: null
   },
@@ -501,7 +501,7 @@
       Length: 0x19A0,
       SHA256: F39B6C4BEB89996C79DE218E78B3E23A0B200F96C0CA519039D24CCE30AE4D8E
     },
-    Name: audio0045.adpcm,
+    Name: audio0045,
     Children: null,
     Tags: null
   },
@@ -512,7 +512,7 @@
       Length: 0x1370,
       SHA256: A3D7184A47996A9F9CCF768EE9399D090093B7926C8E4BCE387C8C29A896362D
     },
-    Name: audio0046.adpcm,
+    Name: audio0046,
     Children: null,
     Tags: null
   }

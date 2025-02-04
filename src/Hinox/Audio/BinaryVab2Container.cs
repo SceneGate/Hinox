@@ -9,6 +9,10 @@ using Yarhl.IO;
 /// Converter for reading a VAB from its standard binary format into
 /// a container with the header and audios nodes.
 /// </summary>
+/// <remarks>
+/// The container contains a node 'header' with the VH content in
+/// <see cref="VabHeader"/> format.
+/// </remarks>
 public class BinaryVab2Container : IConverter<IBinary, NodeContainerFormat>
 {
     /// <inheritdoc />

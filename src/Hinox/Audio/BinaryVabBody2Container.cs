@@ -34,7 +34,7 @@ public class BinaryVabBody2Container : IConverter<IBinary, NodeContainerFormat>
         for (int i = 0; i < header.WaveformSizes.Count; i++) {
             int fileSize = header.WaveformSizes[i];
             var waveformData = new BinaryFormat(source.Stream, currentOffset, fileSize);
-            var waveformNode = new Node($"audio{i:D4}.adpcm", waveformData);
+            var waveformNode = new Node($"audio{i:D4}", waveformData);
             container.Root.Add(waveformNode);
 
             currentOffset += fileSize;
