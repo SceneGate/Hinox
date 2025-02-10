@@ -7,6 +7,7 @@ using Data.HashFunction.CRC;
 using SceneGate.Hinox.Audio;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using YamlDotNet.Serialization;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 
@@ -78,8 +79,11 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
 
     private static void ExportHeader(Node container, string outputPath)
     {
-        string yaml = VabInfo.CreateFromContainer(container, ".adpcm")
-            .ToYaml();
+        VabHeader header = container.Children["header"]!.GetFormatAs<VabHeader>()!;
+        string yaml = new SerializerBuilder()
+            .WithAttributeOverride<VabHeader>(x => x.WaveformSizes, new YamlIgnoreAttribute())
+            .Build()
+            .Serialize(header);
 
         Directory.CreateDirectory(outputPath);
         string fileOutputPath = Path.Combine(outputPath, "vab.yml");
@@ -91,9 +95,14 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         var audios = container.Children.Where(n => n.Name != "header").ToArray();
         for (int i = 0; i < audios.Length; i++) {
             string audioName = GetAudioName(i, audios[i]);
+            audios[i].Name = audioName;
             string audioOutputPath = Path.Combine(outputPath, audioName);
             audios[i].Stream!.WriteTo(audioOutputPath);
         }
+
+        string yaml = ContainerInfo.Create(audios).ToYaml();
+        string fileOutputPath = Path.Combine(outputPath, "files.yml");
+        File.WriteAllText(fileOutputPath, yaml, Encoding.UTF8);
     }
 
     private static string GetAudioName(int index, Node audio)
@@ -102,7 +111,7 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
 
         ICRC crc = CRCFactory.Instance.Create(CRCConfig.CRC32);
         IHashValue hash = crc.ComputeHash(audio.Stream);
-        return $"{index:D4}_{hash.AsHexString().ToUpperInvariant()}.adpcm";
+        return $"{index:D4}_{hash.AsHexString().ToUpperInvariant()}.vag";
     }
 
     private static Node ReadContainer(Settings settings)
