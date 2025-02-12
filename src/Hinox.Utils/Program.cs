@@ -12,6 +12,7 @@ app.Configure(static configurator => {
         audio.AddBranch("vab", static vab => {
             vab.SetDescription("VAB and VH/VB audio format");
             vab.AddCommand<ExportSingleVabCommand>("export");
+            vab.AddCommand<ImportSingleVabCommand>("import");
         });
     });
 });

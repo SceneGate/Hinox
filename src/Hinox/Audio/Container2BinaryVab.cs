@@ -31,20 +31,15 @@ public class Container2BinaryVab : IConverter<NodeContainerFormat, BinaryFormat>
         return vabBinary;
     }
 
-    private static VabHeader GetHeader(NodeContainerFormat source)
-    {
-        VabHeader? header = source.Root.Children
-            .Select(n => n.Format)
-            .OfType<VabHeader>()
-            .FirstOrDefault();
-        if (header is null) {
-            throw new FormatException("Cannot find header node");
-        }
-
-        return header;
-    }
-
-    private static void UpdateFileSizes(VabHeader header, NodeContainerFormat source)
+    /// <summary>
+    /// Update the waveform sizes of a VAB header from the audios of a container.
+    /// </summary>
+    /// <param name="header">The VH format to update.</param>
+    /// <param name="source">The container with audios.</param>
+    /// <remarks>
+    /// The nodes in the container must be binary or VabHeader (ignored).
+    /// </remarks>
+    public static void UpdateFileSizes(VabHeader header, NodeContainerFormat source)
     {
         header.WaveformSizes.Clear();
         foreach (Node child in source.Root.Children) {
@@ -58,5 +53,18 @@ public class Container2BinaryVab : IConverter<NodeContainerFormat, BinaryFormat>
 
             header.WaveformSizes.Add((int)binChild.Stream.Length);
         }
+    }
+
+    private static VabHeader GetHeader(NodeContainerFormat source)
+    {
+        VabHeader? header = source.Root.Children
+            .Select(n => n.Format)
+            .OfType<VabHeader>()
+            .FirstOrDefault();
+        if (header is null) {
+            throw new FormatException("Cannot find header node");
+        }
+
+        return header;
     }
 }

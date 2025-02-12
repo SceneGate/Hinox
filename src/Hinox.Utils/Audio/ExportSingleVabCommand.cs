@@ -11,7 +11,7 @@ using YamlDotNet.Serialization;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 
-[Description("Extract the audios from a VAB or VH/VB audio container")]
+[Description("Extract the audios from a VAB or VH/VB format")]
 internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
 {
     public sealed class Settings : CommandSettings
