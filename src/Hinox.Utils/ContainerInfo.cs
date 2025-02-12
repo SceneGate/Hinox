@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using YamlDotNet.Serialization;
 using Yarhl.FileSystem;
 
@@ -21,12 +22,28 @@ internal record ContainerInfo
         };
     }
 
-    public string ToYaml()
+    public static ContainerInfo FromYaml(string inputPath)
     {
-        return new SerializerBuilder()
+        string yaml = File.ReadAllText(inputPath, Encoding.UTF8);
+        return new DeserializerBuilder()
             .Build()
-            .Serialize(this);
+            .Deserialize<ContainerInfo>(yaml);
     }
 
-    internal record ExportedFileInfo(string Path, long MaxLength);
+    public void WriteAsYaml(string outputPath)
+    {
+        string yaml = new SerializerBuilder()
+            .Build()
+            .Serialize(this);
+
+        File.WriteAllText(outputPath, yaml, Encoding.UTF8);
+    }
+
+    internal record ExportedFileInfo(string Path, long MaxLength)
+    {
+        public ExportedFileInfo()
+            : this(string.Empty, -1)
+        {
+        }
+    }
 }

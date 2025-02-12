@@ -28,6 +28,10 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         [Description("Path to the VB file (VAB body). Ignore if VAB path is provided.")]
         public string? BodyPath { get; set; }
 
+        [CommandOption("--names")]
+        [Description("Optional path to an already exported files.yml containing the names to use for re-exporting")]
+        public string? NamesPath { get; set; }
+
         [CommandOption("-o|--output")]
         [Description("Path to the directory to write the output files.")]
         public required string OutputPath { get; set; }
@@ -62,6 +66,10 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
                 return ValidationResult.Error($"The input VB file '{BodyPath}' does NOT exists");
             }
 
+            if (!string.IsNullOrEmpty(NamesPath) && !File.Exists(NamesPath)) {
+                return ValidationResult.Error($"The input names file '{NamesPath}' does NOT exists");
+            }
+
             return base.Validate();
         }
     }
@@ -73,7 +81,7 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
 
         AnsiConsole.WriteLine($"Exporting content into folder: '{Path.GetFullPath(settings.OutputPath)}'");
         ExportHeader(container, settings.OutputPath);
-        ExportAudios(container, settings.OutputPath);
+        ExportAudios(container, settings.OutputPath, settings.NamesPath);
         return 0;
     }
 
@@ -90,19 +98,39 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         File.WriteAllText(fileOutputPath, yaml, Encoding.UTF8);
     }
 
-    private static void ExportAudios(Node container, string outputPath)
+    private static void ExportAudios(Node container, string outputPath, string? namesPath)
     {
+        ContainerInfo? inputNames = null;
+        if (!string.IsNullOrEmpty(namesPath)) {
+            AnsiConsole.WriteLine($"Reading provided file names from: '{Path.GetFullPath(namesPath)}'");
+            inputNames = ContainerInfo.FromYaml(namesPath);
+        }
+
         var audios = container.Children.Where(n => n.Name != "header").ToArray();
+        if (inputNames is not null && inputNames.Files.Count != audios.Length) {
+            AnsiConsole.MarkupLine(
+                $"[bold red]ERROR[/]: Number of names [blue]{inputNames.Files.Count}[/] " +
+                $"does [red]NOT[/] match audio count [blue]{audios.Length}[/]");
+            return;
+        }
+
         for (int i = 0; i < audios.Length; i++) {
-            string audioName = GetAudioName(i, audios[i]);
+            string audioName = inputNames != null ? inputNames.Files[i].Path : GetAudioName(i, audios[i]);
+            if (audios.Any(n => n.Name == audioName)) {
+                AnsiConsole.MarkupLineInterpolated($"[gray]Skipping duplicated audio #{i} ({audioName})[/]");
+                continue;
+            }
+
             audios[i].Name = audioName;
+
             string audioOutputPath = Path.Combine(outputPath, audioName);
             audios[i].Stream!.WriteTo(audioOutputPath);
         }
 
-        string yaml = ContainerInfo.Create(audios).ToYaml();
-        string fileOutputPath = Path.Combine(outputPath, "files.yml");
-        File.WriteAllText(fileOutputPath, yaml, Encoding.UTF8);
+        if (inputNames is null) {
+            string fileOutputPath = Path.Combine(outputPath, "files.yml");
+            ContainerInfo.Create(audios).WriteAsYaml(fileOutputPath);
+        }
     }
 
     private static string GetAudioName(int index, Node audio)
