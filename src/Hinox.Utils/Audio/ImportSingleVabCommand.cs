@@ -64,7 +64,10 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
 
     public override int Execute(CommandContext context, Settings settings)
     {
-        using Node container = ReadContainer(settings.ContainerInfoPath, settings.VabHeader);
+        using Node? container = ReadContainer(settings.ContainerInfoPath, settings.VabHeader);
+        if (container is null) {
+            return 1;
+        }
 
         if (!string.IsNullOrEmpty(settings.OutputVabPath)) {
             ExportVab(container, settings.OutputVabPath);
@@ -100,36 +103,61 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
         binaryBody.Stream.WriteTo(outVbPath);
     }
 
-    private static Node ReadContainer(string infoPath, string headerPath)
+    private static Node? ReadContainer(string infoPath, string headerPath)
     {
         var container = NodeFactory.CreateContainer("vab");
-        AddHeader(headerPath, container);
-        AddAudios(infoPath, container);
+        if (!AddHeader(headerPath, container)) {
+            return null;
+        }
 
-        AnsiConsole.MarkupLineInterpolated($"VAB container with [blue]{container.Children.Count}[/] nodes in total");
+        if (!AddAudios(infoPath, container)) {
+            return null;
+        }
+
         return container;
     }
 
-    private static void AddHeader(string headerPath, Node container)
+    private static bool AddHeader(string headerPath, Node container)
     {
         AnsiConsole.WriteLine($"Reading header from YML '{Path.GetFullPath(headerPath)}'");
-        string yaml = File.ReadAllText(headerPath, Encoding.UTF8);
-        VabHeader header = new DeserializerBuilder()
-            .Build()
-            .Deserialize<VabHeader>(yaml);
+        try {
+            string yaml = File.ReadAllText(headerPath, Encoding.UTF8);
+            VabHeader header = new DeserializerBuilder()
+                .Build()
+                .Deserialize<VabHeader>(yaml);
 
-        var headerNode = new Node("header", header);
-        container.Add(headerNode);
+            var headerNode = new Node("header", header);
+            container.Add(headerNode);
+            return true;
+        } catch (Exception ex) {
+            AnsiConsole.MarkupLine($"[bold red]ERROR:[/] Failed to read header YAML file: {ex.Message}");
+            return false;
+        }
     }
 
-    private static void AddAudios(string infoPath, Node container)
+    private static bool AddAudios(string infoPath, Node container)
     {
         AnsiConsole.WriteLine($"Reading file info from YML '{Path.GetFullPath(infoPath)}'");
         string basePath = Path.GetDirectoryName(Path.GetFullPath(infoPath))!;
 
-        var containerInfo = ContainerInfo.FromYaml(infoPath);
+        ContainerInfo containerInfo;
+        try {
+            containerInfo = ContainerInfo.FromYaml(infoPath);
+        }  catch (Exception ex) {
+            AnsiConsole.MarkupLine($"[bold red]ERROR:[/] Failed to read info YAML file: {ex.Message}");
+            return false;
+        }
+
+        if (containerInfo.Files.Count > VabHeader.MaximumWaveforms) {
+            AnsiConsole.MarkupLine(
+                $"[bold red]ERROR:[/] Maximum audio files is [blue]{VabHeader.MaximumWaveforms}[/] " +
+                $"but info file contains [red]{containerInfo.Files.Count}[/]");
+            return false;
+        }
+
         AnsiConsole.MarkupLineInterpolated($"Found [blue]{containerInfo.Files.Count}[/] files");
 
+        long totalLength = 0;
         for (int i = 0; i < containerInfo.Files.Count; i++) {
             var audioInfo = containerInfo.Files[i];
             string audioPath = Path.GetFullPath(audioInfo.Path, basePath);
@@ -140,16 +168,25 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
 
             // Rename to ensure duplicated files are added as copies instead of replaced
             Node audioNode = NodeFactory.FromFile(audioPath, $"audio_{i}", FileOpenMode.Read);
+            totalLength += audioNode.Stream!.Length;
 
             if (audioInfo.MaxLength > -1 && audioNode.Stream!.Length > audioInfo.MaxLength) {
                 AnsiConsole.MarkupLine(
-                    $"[bold red]ERROR:[/] Audio '{audioInfo.Path}' " +
+                    $"[bold yellow]WARNING:[/] Audio '{audioInfo.Path}' " +
                     $"with file size [red]{audioNode.Stream!.Length}[/] larger " +
-                    $"than allowed [blue]{audioInfo.MaxLength}[/]");
-                throw new InvalidOperationException("File larger than allowed");
+                    $"than original size [blue]{audioInfo.MaxLength}[/]");
             }
 
             container.Add(audioNode);
         }
+
+        if (totalLength > VabHeader.MaximumTotalWaveformsSize) {
+            AnsiConsole.MarkupLine(
+                $"[bold red]ERROR:[/] Total audio length [red]{totalLength}[/] " +
+                $"is larger than supported by the format [blue]{VabHeader.MaximumTotalWaveformsSize}[/]");
+            return false;
+        }
+
+        return true;
     }
 }

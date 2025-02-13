@@ -29,6 +29,18 @@ public class VabHeader : IFormat
     public static string FormatId => "pBAV";
 
     /// <summary>
+    /// Gets the maximum number of waveforms in the container.
+    /// </summary>
+    public static int MaximumWaveforms => 254;
+
+    /// <summary>
+    /// Gets the maximum allowed total length of all the waveforms in the container.
+    /// This is the sum of all the waveforms sizes as they would be on memory.
+    /// </summary>
+    /// <remarks>This is driven by a hardware limit of 512KB in the SPU RAM.</remarks>
+    public static int MaximumTotalWaveformsSize => 0x7E000;
+
+    /// <summary>
     /// Gets or sets the version of the format.
     /// </summary>
     public int Version { get; set; }
