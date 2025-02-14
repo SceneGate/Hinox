@@ -10,6 +10,9 @@ using Yarhl.IO;
 /// </summary>
 public class Container2BinaryVabBody : IConverter<NodeContainerFormat, BinaryFormat>
 {
+    private const string VagFormatId = "pGAV";
+    private const int VagDataOffset = 0x30;
+
     /// <inheritdoc />
     public BinaryFormat Convert(NodeContainerFormat source)
     {
@@ -32,7 +35,11 @@ public class Container2BinaryVabBody : IConverter<NodeContainerFormat, BinaryFor
                 throw new FormatException("Reached maximum number of audio files");
             }
 
-            binChild.Stream.WriteTo(binary.Stream);
+            if (IsVagFormat(binChild.Stream)) {
+                binChild.Stream.WriteSegmentTo(VagDataOffset, binary.Stream);
+            } else {
+                binChild.Stream.WriteTo(binary.Stream);
+            }
         }
 
         if (binary.Stream.Length > VabHeader.MaximumTotalWaveformsSize) {
@@ -40,5 +47,32 @@ public class Container2BinaryVabBody : IConverter<NodeContainerFormat, BinaryFor
         }
 
         return binary;
+    }
+
+    /// <summary>
+    /// Get the length of the waveform data that will be written in the VAB body.
+    /// </summary>
+    /// <param name="waveform">Waveform stream.</param>
+    /// <returns>Length of the given stream to be written.</returns>
+    /// <remarks>
+    /// It will attempt to detect if it's a VAG (valid, with format ID in the header)
+    /// and if it's the case, it will skip its header.
+    /// </remarks>
+    public static long GetWaveformLength(Stream waveform)
+    {
+        return IsVagFormat(waveform)
+            ? waveform.Length - VagDataOffset
+            : waveform.Length;
+    }
+
+    private static bool IsVagFormat(Stream binary)
+    {
+        if (binary.Length == 0) {
+            return false;
+        }
+
+        binary.Position = 0;
+        var reader = new DataReader(binary);
+        return reader.ReadString(4) == VagFormatId;
     }
 }
