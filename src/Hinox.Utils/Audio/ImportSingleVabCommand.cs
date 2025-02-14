@@ -168,9 +168,14 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
 
             // Rename to ensure duplicated files are added as copies instead of replaced
             Node audioNode = NodeFactory.FromFile(audioPath, $"audio_{i}", FileOpenMode.Read);
-            totalLength += audioNode.Stream!.Length;
+            long audioLength = VagFormatAnalyzer.GetChannelsLength(audioNode.Stream!);
+            if (audioLength != audioNode.Stream!.Length) {
+                AnsiConsole.WriteLine($"[bold blue]INFO:[/] '{audioNode.Name}' detected as VAG with header");
+            }
 
-            if (audioInfo.OriginalLength > -1 && audioNode.Stream!.Length > audioInfo.OriginalLength) {
+            totalLength += audioLength;
+
+            if (audioInfo.OriginalLength > -1 && audioLength > audioInfo.OriginalLength) {
                 AnsiConsole.MarkupLine(
                     $"[bold yellow]WARNING:[/] Audio '{audioInfo.Path}' " +
                     $"with file size [red]{audioNode.Stream!.Length}[/] larger " +

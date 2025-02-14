@@ -51,7 +51,7 @@ public class Container2BinaryVab : IConverter<NodeContainerFormat, BinaryFormat>
                 throw new FormatException($"Invalid format for child: '{child.Path}'");
             }
 
-            long childLength = Container2BinaryVabBody.GetWaveformLength(binChild.Stream);
+            long childLength = VagFormatAnalyzer.GetChannelsLength(binChild.Stream);
             header.WaveformSizes.Add((int)childLength);
         }
     }

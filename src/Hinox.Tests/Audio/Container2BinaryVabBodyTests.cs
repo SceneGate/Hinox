@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using SceneGate.Hinox.Audio;
+using VerifyTests;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 
@@ -32,6 +33,11 @@ public class Container2BinaryVabBodyTests
         BinaryFormat newBinary = new Container2BinaryVabBody().Convert(deserialized);
 
         bool identical = newBinary.Stream.Compare(originalBinary.Stream);
+        if (!identical) {
+            string failedPath = Path.Combine(TestDataBase.VabResources, "Failed", vbName);
+            newBinary.Stream.WriteTo(failedPath);
+        }
+
         Assert.That(identical, Is.True, "Streams are different");
     }
 
