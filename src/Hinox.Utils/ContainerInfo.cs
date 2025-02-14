@@ -39,7 +39,7 @@ internal record ContainerInfo
         File.WriteAllText(outputPath, yaml, Encoding.UTF8);
     }
 
-    internal record ExportedFileInfo(string Path, long MaxLength)
+    internal record ExportedFileInfo(string Path, long OriginalLength)
     {
         public ExportedFileInfo()
             : this(string.Empty, -1)

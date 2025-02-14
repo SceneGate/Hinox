@@ -28,8 +28,8 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         [Description("Path to the VB file (VAB body). Ignore if VAB path is provided.")]
         public string? BodyPath { get; set; }
 
-        [CommandOption("--names")]
-        [Description("Optional path to an already exported files.yml containing the names to use for re-exporting")]
+        [CommandOption("--files")]
+        [Description("Optional path to a previously exported files.yml for having custom names when exporting")]
         public string? NamesPath { get; set; }
 
         [CommandOption("-o|--output")]
@@ -117,7 +117,7 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         for (int i = 0; i < audios.Length; i++) {
             string audioName = inputNames != null ? inputNames.Files[i].Path : GetAudioName(i, audios[i]);
             if (audios.Any(n => n.Name == audioName)) {
-                AnsiConsole.MarkupLineInterpolated($"[gray]Skipping duplicated audio #{i} ({audioName})[/]");
+                AnsiConsole.MarkupLineInterpolated($"[gray]Skipping audio with duplicated name #{i} ({audioName})[/]");
                 continue;
             }
 

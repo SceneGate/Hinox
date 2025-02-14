@@ -16,7 +16,7 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
 {
     public sealed class Settings : CommandSettings
     {
-        [CommandOption("-i|--info")]
+        [CommandOption("-f|--files")]
         [Description("Path to the files.yml with the audio paths to import")]
         public required string ContainerInfoPath { get; set; }
 
@@ -170,11 +170,11 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
             Node audioNode = NodeFactory.FromFile(audioPath, $"audio_{i}", FileOpenMode.Read);
             totalLength += audioNode.Stream!.Length;
 
-            if (audioInfo.MaxLength > -1 && audioNode.Stream!.Length > audioInfo.MaxLength) {
+            if (audioInfo.OriginalLength > -1 && audioNode.Stream!.Length > audioInfo.OriginalLength) {
                 AnsiConsole.MarkupLine(
                     $"[bold yellow]WARNING:[/] Audio '{audioInfo.Path}' " +
                     $"with file size [red]{audioNode.Stream!.Length}[/] larger " +
-                    $"than original size [blue]{audioInfo.MaxLength}[/]");
+                    $"than original size [blue]{audioInfo.OriginalLength}[/]");
             }
 
             container.Add(audioNode);
