@@ -1,5 +1,4 @@
-﻿
-namespace SceneGate.Hinox.Audio;
+﻿namespace SceneGate.Hinox.Audio;
 
 using System;
 using Yarhl.FileFormat;
@@ -17,6 +16,8 @@ public class Container2BinaryVabBody : IConverter<NodeContainerFormat, BinaryFor
         ArgumentNullException.ThrowIfNull(source);
 
         var binary = new BinaryFormat();
+
+        int count = 0;
         foreach (Node child in source.Root.Children) {
             if (child.Format is VabHeader) {
                 continue;
@@ -26,7 +27,16 @@ public class Container2BinaryVabBody : IConverter<NodeContainerFormat, BinaryFor
                 throw new FormatException($"Invalid format for child: '{child.Path}'");
             }
 
+            count++;
+            if (count > VabHeader.MaximumWaveforms) {
+                throw new FormatException("Reached maximum number of audio files");
+            }
+
             binChild.Stream.WriteTo(binary.Stream);
+        }
+
+        if (binary.Stream.Length > VabHeader.MaximumTotalWaveformsSize) {
+            throw new FormatException("Total audio length is larger than maximum supported");
         }
 
         return binary;
