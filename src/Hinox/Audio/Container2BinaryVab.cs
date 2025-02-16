@@ -11,6 +11,28 @@ using Yarhl.IO;
 /// </summary>
 public class Container2BinaryVab : IConverter<NodeContainerFormat, BinaryFormat>
 {
+    private readonly bool autodetectVag;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Container2BinaryVab"/> class
+    /// without VAG autodetection.
+    /// </summary>
+    public Container2BinaryVab()
+    {
+        autodetectVag = false;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Container2BinaryVab"/> class.
+    /// </summary>
+    /// <param name="autodetectVag">
+    /// Indicates whether to autodetect and remove VAG header in audio files.
+    /// </param>
+    public Container2BinaryVab(bool autodetectVag)
+    {
+        this.autodetectVag = autodetectVag;
+    }
+
     /// <inheritdoc />
     public BinaryFormat Convert(NodeContainerFormat source)
     {
@@ -18,14 +40,14 @@ public class Container2BinaryVab : IConverter<NodeContainerFormat, BinaryFormat>
 
         // Update wave sizes before writing anything
         VabHeader header = GetHeader(source);
-        UpdateFileSizes(header, source);
+        UpdateFileSizes(header, source, autodetectVag);
 
         var vabBinary = new BinaryFormat();
 
         using var vhBinary = new VabHeader2Binary().Convert(header);
         vhBinary.Stream.WriteTo(vabBinary.Stream);
 
-        using var vbBinary = new Container2BinaryVabBody().Convert(source);
+        using var vbBinary = new Container2BinaryVabBody(autodetectVag).Convert(source);
         vbBinary.Stream.WriteTo(vabBinary.Stream);
 
         return vabBinary;
@@ -36,10 +58,11 @@ public class Container2BinaryVab : IConverter<NodeContainerFormat, BinaryFormat>
     /// </summary>
     /// <param name="header">The VH format to update.</param>
     /// <param name="source">The container with audios.</param>
+    /// <param name="autodetectVag">Value indicating whether to autodetect and remove VAG header.</param>
     /// <remarks>
     /// The nodes in the container must be binary or VabHeader (ignored).
     /// </remarks>
-    public static void UpdateFileSizes(VabHeader header, NodeContainerFormat source)
+    public static void UpdateFileSizes(VabHeader header, NodeContainerFormat source, bool autodetectVag)
     {
         header.WaveformSizes.Clear();
         foreach (Node child in source.Root.Children) {
@@ -51,7 +74,9 @@ public class Container2BinaryVab : IConverter<NodeContainerFormat, BinaryFormat>
                 throw new FormatException($"Invalid format for child: '{child.Path}'");
             }
 
-            long childLength = VagFormatAnalyzer.GetChannelsLength(binChild.Stream);
+            long childLength = autodetectVag
+                ? VagFormatAnalyzer.GetChannelsLength(binChild.Stream)
+                : binChild.Stream.Length;
             header.WaveformSizes.Add((int)childLength);
         }
     }

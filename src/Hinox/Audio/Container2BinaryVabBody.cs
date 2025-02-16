@@ -10,6 +10,28 @@ using Yarhl.IO;
 /// </summary>
 public class Container2BinaryVabBody : IConverter<NodeContainerFormat, BinaryFormat>
 {
+    private readonly bool autodetectVag;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Container2BinaryVab"/> class
+    /// without VAG autodetection.
+    /// </summary>
+    public Container2BinaryVabBody()
+    {
+        autodetectVag = false;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Container2BinaryVab"/> class.
+    /// </summary>
+    /// <param name="autodetectVag">
+    /// Indicates whether to autodetect and remove VAG header in audio files.
+    /// </param>
+    public Container2BinaryVabBody(bool autodetectVag)
+    {
+        this.autodetectVag = autodetectVag;
+    }
+
     /// <inheritdoc />
     public BinaryFormat Convert(NodeContainerFormat source)
     {
@@ -32,10 +54,10 @@ public class Container2BinaryVabBody : IConverter<NodeContainerFormat, BinaryFor
                 throw new FormatException("Reached maximum number of audio files");
             }
 
-            long channelsLength = VagFormatAnalyzer.GetChannelsLength(binChild.Stream);
-            if (channelsLength == binChild.Stream.Length) {
+            if (!autodetectVag) {
                 binChild.Stream.WriteTo(binary.Stream);
             } else {
+                long channelsLength = VagFormatAnalyzer.GetChannelsLength(binChild.Stream);
                 long dataOffset = binChild.Stream.Length - channelsLength;
                 binChild.Stream.WriteSegmentTo(dataOffset, binary.Stream);
             }

@@ -39,6 +39,11 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
         [Description("Export the body container as VB format into the provided path")]
         public string? OutputBodyPath { get; set; }
 
+        [CommandOption("--autodetect-vag")]
+        [Description("If set, it tries to autodetect VAG headers in audio files")]
+        [DefaultValue(false)]
+        public bool AutoDetectVag { get; set; }
+
         [CommandOption("-v|--verbosity")]
         [Description("Logging output verbosity")]
         [DefaultValue(LogLevel.Warning)]
@@ -75,53 +80,53 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
         AppLoggerFactory.MinimumLevel = settings.Verbosity;
         logger = AppLoggerFactory.CreateLogger<ImportSingleVabCommand>();
 
-        using Node? container = ReadContainer(settings.ContainerInfoPath, settings.VabHeader);
+        using Node? container = ReadContainer(settings.ContainerInfoPath, settings.VabHeader, settings.AutoDetectVag);
         if (container is null) {
             return 1;
         }
 
         if (!string.IsNullOrEmpty(settings.OutputVabPath)) {
-            ExportVab(container, settings.OutputVabPath);
+            ExportVab(container, settings.AutoDetectVag, settings.OutputVabPath);
         } else {
-            ExportVhVb(container, settings.OutputHeaderPath!, settings.OutputBodyPath!);
+            ExportVhVb(container, settings.AutoDetectVag, settings.OutputHeaderPath!, settings.OutputBodyPath!);
         }
 
         return 0;
     }
 
-    private void ExportVab(Node container, string outputPath)
+    private void ExportVab(Node container, bool autodetect, string outputPath)
     {
         logger.LogInformation("Exporting as VAB format into '{Path}'", Path.GetFullPath(outputPath));
-        container.TransformWith<Container2BinaryVab>()
+        container.TransformWith(new Container2BinaryVab(autodetect))
             .Stream!.WriteTo(outputPath);
     }
 
-    private void ExportVhVb(Node container, string outVhPath, string outVbPath)
+    private void ExportVhVb(Node container, bool autodetect, string outVhPath, string outVbPath)
     {
         VabHeader header = container.Children["header"]!.GetFormatAs<VabHeader>()!;
 
         var audios = new NodeContainerFormat();
         audios.Root.Add(container.Children.Where(n => n.Name != "header"));
 
-        Container2BinaryVab.UpdateFileSizes(header, audios);
+        Container2BinaryVab.UpdateFileSizes(header, audios,autodetect);
 
         logger.LogInformation("Exporting header in VH format into '{Path}'", Path.GetFullPath(outVhPath));
         using BinaryFormat binaryHeader = new VabHeader2Binary().Convert(header);
         binaryHeader.Stream!.WriteTo(outVhPath);
 
         logger.LogInformation("Exporting body in VB format into '{Path}'", Path.GetFullPath(outVbPath));
-        using BinaryFormat binaryBody = new Container2BinaryVabBody().Convert(audios);
+        using BinaryFormat binaryBody = new Container2BinaryVabBody(autodetect).Convert(audios);
         binaryBody.Stream.WriteTo(outVbPath);
     }
 
-    private Node? ReadContainer(string infoPath, string headerPath)
+    private Node? ReadContainer(string infoPath, string headerPath, bool autodetect)
     {
         var container = NodeFactory.CreateContainer("vab");
         if (!AddHeader(headerPath, container)) {
             return null;
         }
 
-        if (!AddAudios(infoPath, container)) {
+        if (!AddAudios(infoPath, autodetect, container)) {
             return null;
         }
 
@@ -146,7 +151,7 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
         }
     }
 
-    private bool AddAudios(string infoPath, Node container)
+    private bool AddAudios(string infoPath, bool autodetect, Node container)
     {
         logger.LogInformation("Reading file info from YML '{Path}'", Path.GetFullPath(infoPath));
         string basePath = Path.GetDirectoryName(Path.GetFullPath(infoPath))!;
@@ -171,31 +176,10 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
 
         long totalLength = 0;
         for (int i = 0; i < containerInfo.Files.Count; i++) {
-            var audioInfo = containerInfo.Files[i];
-            string audioPath = Path.GetFullPath(audioInfo.Path, basePath);
-            if (!File.Exists(audioPath)) {
-                logger.LogError("Cannot find audio: '{Path}'", audioPath);
-                throw new FileNotFoundException("Audio file not found", audioPath);
-            }
-
-            // Rename to ensure duplicated files are added as copies instead of replaced
-            Node audioNode = NodeFactory.FromFile(audioPath, $"audio_{i}", FileOpenMode.Read);
-            long audioLength = VagFormatAnalyzer.GetChannelsLength(audioNode.Stream!);
-            if (audioLength != audioNode.Stream!.Length) {
-                logger.LogDebug("'{Name}' detected as VAG with header", audioNode.Name);
-            }
-
-            totalLength += audioLength;
-
-            if (audioInfo.OriginalLength > -1 && audioLength > audioInfo.OriginalLength) {
-                logger.LogWarning(
-                    "Audio '{Path}' with file size {Actual} larger than original size {Original}",
-                    audioInfo.Path,
-                    audioNode.Stream!.Length,
-                    audioInfo.OriginalLength);
-            }
-
+            Node audioNode = OpenAudio(i, containerInfo.Files[i], basePath, autodetect);
             container.Add(audioNode);
+
+            totalLength += audioNode.Stream!.Length;
         }
 
         if (totalLength > VabHeader.MaximumTotalWaveformsSize) {
@@ -207,5 +191,41 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
         }
 
         return true;
+    }
+
+    private Node OpenAudio(int idx, ExportedFileInfo audioInfo, string basePath, bool autodetect)
+    {
+        string audioPath = Path.GetFullPath(audioInfo.Path, basePath);
+        if (!File.Exists(audioPath)) {
+            logger.LogError("Cannot find audio: '{Path}'", audioPath);
+            throw new FileNotFoundException("Audio file not found", audioPath);
+        }
+
+        long audioOffset = audioInfo.Offset;
+        if (audioOffset == 0 && autodetect) {
+            using var tempVagStream = DataStreamFactory.FromFile(audioPath, FileOpenMode.Read);
+            long audioLength = VagFormatAnalyzer.GetChannelsLength(tempVagStream);
+
+            audioOffset = tempVagStream.Length - audioLength;
+            if (audioOffset > 0) {
+                logger.LogDebug("'{Name}' detected as VAG with header", audioInfo.Path);
+            }
+        }
+
+        using var fullData = DataStreamFactory.FromFile(audioPath, FileOpenMode.Read); // temp stream for slicing
+        var actualData = new BinaryFormat(fullData.Slice(audioOffset));
+
+        // Rename to ensure duplicated files are added as copies instead of replaced
+        var audioNode = new Node($"audio_{idx}", actualData);
+
+        if (audioInfo.OriginalLength > -1 && audioNode.Stream!.Length > audioInfo.OriginalLength) {
+            logger.LogWarning(
+                "Audio '{Path}' with file size {Actual} larger than original size {Original}",
+                audioInfo.Path,
+                audioNode.Stream!.Length,
+                audioInfo.OriginalLength);
+        }
+
+        return audioNode;
     }
 }

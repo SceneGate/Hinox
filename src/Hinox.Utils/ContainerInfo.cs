@@ -15,7 +15,7 @@ internal record ContainerInfo
     {
         var infos = nodes
             .Where(n => n.Stream is not null)
-            .Select(n => new ExportedFileInfo(n.Name, n.Stream!.Length))
+            .Select(n => new ExportedFileInfo(n.Name, 0, n.Stream!.Length))
             .ToList();
         return new ContainerInfo {
             Files = new Collection<ExportedFileInfo>(infos),
@@ -33,17 +33,10 @@ internal record ContainerInfo
     public void WriteAsYaml(string outputPath)
     {
         string yaml = new SerializerBuilder()
+            .WithAttributeOverride<ExportedFileInfo>(x => x.Offset, new YamlIgnoreAttribute())
             .Build()
             .Serialize(this);
 
         File.WriteAllText(outputPath, yaml, Encoding.UTF8);
-    }
-
-    internal record ExportedFileInfo(string Path, long OriginalLength)
-    {
-        public ExportedFileInfo()
-            : this(string.Empty, -1)
-        {
-        }
     }
 }
