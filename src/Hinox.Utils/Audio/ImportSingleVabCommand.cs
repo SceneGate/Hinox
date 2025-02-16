@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using SceneGate.Hinox.Audio;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -14,6 +15,8 @@ using Yarhl.IO;
 [Description("Import audio files into VAB or VH/VB format")]
 internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
 {
+    private ILogger<ImportSingleVabCommand> logger = null!;
+
     public sealed class Settings : CommandSettings
     {
         [CommandOption("-f|--files")]
@@ -35,6 +38,11 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
         [CommandOption("--out-vb")]
         [Description("Export the body container as VB format into the provided path")]
         public string? OutputBodyPath { get; set; }
+
+        [CommandOption("-v|--verbosity")]
+        [Description("Logging output verbosity")]
+        [DefaultValue(LogLevel.Warning)]
+        public LogLevel Verbosity { get; set; }
 
         public override ValidationResult Validate()
         {
@@ -64,6 +72,9 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
 
     public override int Execute(CommandContext context, Settings settings)
     {
+        AppLoggerFactory.MinimumLevel = settings.Verbosity;
+        logger = AppLoggerFactory.CreateLogger<ImportSingleVabCommand>();
+
         using Node? container = ReadContainer(settings.ContainerInfoPath, settings.VabHeader);
         if (container is null) {
             return 1;
@@ -78,14 +89,14 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
         return 0;
     }
 
-    private static void ExportVab(Node container, string outputPath)
+    private void ExportVab(Node container, string outputPath)
     {
-        AnsiConsole.WriteLine($"Exporting as VAB format into '{Path.GetFullPath(outputPath)}'");
+        logger.LogInformation("Exporting as VAB format into '{Path}'", Path.GetFullPath(outputPath));
         container.TransformWith<Container2BinaryVab>()
             .Stream!.WriteTo(outputPath);
     }
 
-    private static void ExportVhVb(Node container, string outVhPath, string outVbPath)
+    private void ExportVhVb(Node container, string outVhPath, string outVbPath)
     {
         VabHeader header = container.Children["header"]!.GetFormatAs<VabHeader>()!;
 
@@ -94,16 +105,16 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
 
         Container2BinaryVab.UpdateFileSizes(header, audios);
 
-        AnsiConsole.WriteLine($"Exporting header in VH format into '{Path.GetFullPath(outVhPath)}'");
+        logger.LogInformation("Exporting header in VH format into '{Path}'", Path.GetFullPath(outVhPath));
         using BinaryFormat binaryHeader = new VabHeader2Binary().Convert(header);
         binaryHeader.Stream!.WriteTo(outVhPath);
 
-        AnsiConsole.WriteLine($"Exporting body in VB format into '{Path.GetFullPath(outVbPath)}'");
+        logger.LogInformation("Exporting body in VB format into '{Path}'", Path.GetFullPath(outVbPath));
         using BinaryFormat binaryBody = new Container2BinaryVabBody().Convert(audios);
         binaryBody.Stream.WriteTo(outVbPath);
     }
 
-    private static Node? ReadContainer(string infoPath, string headerPath)
+    private Node? ReadContainer(string infoPath, string headerPath)
     {
         var container = NodeFactory.CreateContainer("vab");
         if (!AddHeader(headerPath, container)) {
@@ -117,9 +128,9 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
         return container;
     }
 
-    private static bool AddHeader(string headerPath, Node container)
+    private bool AddHeader(string headerPath, Node container)
     {
-        AnsiConsole.WriteLine($"Reading header from YML '{Path.GetFullPath(headerPath)}'");
+        logger.LogInformation("Reading header from YML '{Path}'", Path.GetFullPath(headerPath));
         try {
             string yaml = File.ReadAllText(headerPath, Encoding.UTF8);
             VabHeader header = new DeserializerBuilder()
@@ -130,39 +141,40 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
             container.Add(headerNode);
             return true;
         } catch (Exception ex) {
-            AnsiConsole.MarkupLine($"[bold red]ERROR:[/] Failed to read header YAML file: {ex.Message}");
+            logger.LogError(ex, "Failed to read header YAML file");
             return false;
         }
     }
 
-    private static bool AddAudios(string infoPath, Node container)
+    private bool AddAudios(string infoPath, Node container)
     {
-        AnsiConsole.WriteLine($"Reading file info from YML '{Path.GetFullPath(infoPath)}'");
+        logger.LogInformation("Reading file info from YML '{Path}'", Path.GetFullPath(infoPath));
         string basePath = Path.GetDirectoryName(Path.GetFullPath(infoPath))!;
 
         ContainerInfo containerInfo;
         try {
             containerInfo = ContainerInfo.FromYaml(infoPath);
         }  catch (Exception ex) {
-            AnsiConsole.MarkupLine($"[bold red]ERROR:[/] Failed to read info YAML file: {ex.Message}");
+            logger.LogError(ex, "Failed to read info YAML file");
             return false;
         }
 
         if (containerInfo.Files.Count > VabHeader.MaximumWaveforms) {
-            AnsiConsole.MarkupLine(
-                $"[bold red]ERROR:[/] Maximum audio files is [blue]{VabHeader.MaximumWaveforms}[/] " +
-                $"but info file contains [red]{containerInfo.Files.Count}[/]");
+            logger.LogError(
+                "Maximum audio files is {Max} but info file contains {Actual}",
+                VabHeader.MaximumWaveforms,
+                containerInfo.Files.Count);
             return false;
         }
 
-        AnsiConsole.MarkupLineInterpolated($"Found [blue]{containerInfo.Files.Count}[/] files");
+        logger.LogDebug("Found {Count} files", containerInfo.Files.Count);
 
         long totalLength = 0;
         for (int i = 0; i < containerInfo.Files.Count; i++) {
             var audioInfo = containerInfo.Files[i];
             string audioPath = Path.GetFullPath(audioInfo.Path, basePath);
             if (!File.Exists(audioPath)) {
-                AnsiConsole.MarkupLineInterpolated($"[bold red]ERROR:[/] Cannot find audio: '{audioPath}'");
+                logger.LogError("Cannot find audio: '{Path}'", audioPath);
                 throw new FileNotFoundException("Audio file not found", audioPath);
             }
 
@@ -170,25 +182,27 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
             Node audioNode = NodeFactory.FromFile(audioPath, $"audio_{i}", FileOpenMode.Read);
             long audioLength = VagFormatAnalyzer.GetChannelsLength(audioNode.Stream!);
             if (audioLength != audioNode.Stream!.Length) {
-                AnsiConsole.WriteLine($"[bold blue]INFO:[/] '{audioNode.Name}' detected as VAG with header");
+                logger.LogDebug("'{Name}' detected as VAG with header", audioNode.Name);
             }
 
             totalLength += audioLength;
 
             if (audioInfo.OriginalLength > -1 && audioLength > audioInfo.OriginalLength) {
-                AnsiConsole.MarkupLine(
-                    $"[bold yellow]WARNING:[/] Audio '{audioInfo.Path}' " +
-                    $"with file size [red]{audioNode.Stream!.Length}[/] larger " +
-                    $"than original size [blue]{audioInfo.OriginalLength}[/]");
+                logger.LogWarning(
+                    "Audio '{Path}' with file size {Actual} larger than original size {Original}",
+                    audioInfo.Path,
+                    audioNode.Stream!.Length,
+                    audioInfo.OriginalLength);
             }
 
             container.Add(audioNode);
         }
 
         if (totalLength > VabHeader.MaximumTotalWaveformsSize) {
-            AnsiConsole.MarkupLine(
-                $"[bold red]ERROR:[/] Total audio length [red]{totalLength}[/] " +
-                $"is larger than supported by the format [blue]{VabHeader.MaximumTotalWaveformsSize}[/]");
+            logger.LogError(
+                "Total audio length {Actual} is larger than supported by the format {Max}",
+                totalLength,
+                VabHeader.MaximumTotalWaveformsSize);
             return false;
         }
 

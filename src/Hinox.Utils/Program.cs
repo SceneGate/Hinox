@@ -1,11 +1,10 @@
-﻿using SceneGate.Hinox.Utils.Audio;
+﻿using NLog;
+using SceneGate.Hinox.Utils.Audio;
 using Spectre.Console;
 using Spectre.Console.Cli;
 
 var app = new CommandApp();
 app.Configure(static configurator => {
-    configurator.SetExceptionHandler((ex, _) => AnsiConsole.WriteException(ex));
-
     configurator.AddBranch("audio", static audio => {
         audio.SetDescription("Audio file formats");
 
@@ -18,6 +17,7 @@ app.Configure(static configurator => {
 });
 
 int result = await app.RunAsync(args);
+LogManager.Shutdown();
 
 string resultColor = result == 0 ? "green" : "red";
 AnsiConsole.WriteLine();

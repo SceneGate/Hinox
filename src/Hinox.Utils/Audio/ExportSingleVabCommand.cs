@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Text;
 using Data.HashFunction;
 using Data.HashFunction.CRC;
+using Microsoft.Extensions.Logging;
 using SceneGate.Hinox.Audio;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -14,6 +15,8 @@ using Yarhl.IO;
 [Description("Extract the audios from a VAB or VH/VB format")]
 internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
 {
+    private ILogger<ExportSingleVabCommand> logger = null!;
+
     public sealed class Settings : CommandSettings
     {
         [CommandOption("--vab")]
@@ -35,6 +38,11 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         [CommandOption("-o|--output")]
         [Description("Path to the directory to write the output files.")]
         public required string OutputPath { get; set; }
+
+        [CommandOption("-v|--verbosity")]
+        [Description("Logging output verbosity")]
+        [DefaultValue(LogLevel.Warning)]
+        public LogLevel Verbosity { get; set; }
 
         public override ValidationResult Validate()
         {
@@ -76,10 +84,13 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
 
     public override int Execute(CommandContext context, Settings settings)
     {
-        using Node container = ReadContainer(settings);
-        AnsiConsole.MarkupLineInterpolated($"Found [blue]{container.Children.Count - 1}[/] audios");
+        AppLoggerFactory.MinimumLevel = settings.Verbosity;
+        logger = AppLoggerFactory.CreateLogger<ExportSingleVabCommand>();
 
-        AnsiConsole.WriteLine($"Exporting content into folder: '{Path.GetFullPath(settings.OutputPath)}'");
+        using Node container = ReadContainer(settings);
+        logger.LogDebug("Found {Count} audios", container.Children.Count - 1);
+
+        logger.LogInformation("Exporting content into folder: '{Path}'", Path.GetFullPath(settings.OutputPath));
         ExportHeader(container, settings.OutputPath);
         ExportAudios(container, settings.OutputPath, settings.NamesPath);
         return 0;
@@ -98,26 +109,27 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         File.WriteAllText(fileOutputPath, yaml, Encoding.UTF8);
     }
 
-    private static void ExportAudios(Node container, string outputPath, string? namesPath)
+    private void ExportAudios(Node container, string outputPath, string? namesPath)
     {
         ContainerInfo? inputNames = null;
         if (!string.IsNullOrEmpty(namesPath)) {
-            AnsiConsole.WriteLine($"Reading provided file names from: '{Path.GetFullPath(namesPath)}'");
+            logger.LogInformation("Reading provided file names from: '{Path}'", Path.GetFullPath(namesPath));
             inputNames = ContainerInfo.FromYaml(namesPath);
         }
 
         var audios = container.Children.Where(n => n.Name != "header").ToArray();
         if (inputNames is not null && inputNames.Files.Count != audios.Length) {
-            AnsiConsole.MarkupLine(
-                $"[bold red]ERROR[/]: Number of names [blue]{inputNames.Files.Count}[/] " +
-                $"does [red]NOT[/] match audio count [blue]{audios.Length}[/]");
+            logger.LogError(
+                "Number of names {Actual} does NOT match audio count {Expected}",
+                inputNames.Files.Count,
+                audios.Length);
             return;
         }
 
         for (int i = 0; i < audios.Length; i++) {
             string audioName = inputNames != null ? inputNames.Files[i].Path : GetAudioName(i, audios[i]);
             if (audios.Any(n => n.Name == audioName)) {
-                AnsiConsole.MarkupLineInterpolated($"[gray]Skipping audio with duplicated name #{i} ({audioName})[/]");
+                logger.LogInformation("Skipping audio with duplicated name #{Index} ({Name})", i, audioName);
                 continue;
             }
 
@@ -142,28 +154,28 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         return $"{index:D4}_{hash.AsHexString().ToUpperInvariant()}.vag";
     }
 
-    private static Node ReadContainer(Settings settings)
+    private Node ReadContainer(Settings settings)
     {
         return string.IsNullOrEmpty(settings.VabPath)
             ? ReadHeaderBodyFiles(settings.HeaderPath!, settings.BodyPath!)
             : ReadVabFile(settings.VabPath);
     }
 
-    private static Node ReadVabFile(string vabPath)
+    private Node ReadVabFile(string vabPath)
     {
-        AnsiConsole.WriteLine($"Reading VAB '{Path.GetFullPath(vabPath)}'");
+        logger.LogInformation("Reading VAB '{Path}'", Path.GetFullPath(vabPath));
         return NodeFactory.FromFile(vabPath, FileOpenMode.Read)
             .TransformWith<BinaryVab2Container>();
     }
 
-    private static Node ReadHeaderBodyFiles(string headerPath, string bodyPath)
+    private Node ReadHeaderBodyFiles(string headerPath, string bodyPath)
     {
-        AnsiConsole.WriteLine($"Reading VH '{Path.GetFullPath(headerPath)}");
+        logger.LogInformation("Reading VH '{Path}'", Path.GetFullPath(headerPath));
         Node headerNode = NodeFactory.FromFile(headerPath, "header", FileOpenMode.Read)
             .TransformWith<Binary2VabHeader>();
         VabHeader header = headerNode.GetFormatAs<VabHeader>()!;
 
-        AnsiConsole.WriteLine($"Reading VB '{Path.GetFullPath(bodyPath)}");
+        logger.LogInformation("Reading VB '{Path}'", Path.GetFullPath(bodyPath));
         Node container = NodeFactory.FromFile(bodyPath, FileOpenMode.Read)
             .TransformWith(new BinaryVabBody2Container(header));
 
