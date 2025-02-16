@@ -25,7 +25,10 @@ framework that provides support for **PS1 (PSX) file formats.**
 
 ## Supported formats
 
-🚧 Project in an early development phase. No formats are supported yet.
+- :speaker: **VAB** audio containers
+  - Versions 5, 6 and 7
+  - Header (VH): read and write
+  - Body (VB and VAB): read and write
 
 ## Usage
 
@@ -33,8 +36,7 @@ The project provides the following .NET libraries (NuGet packages in nuget.org).
 The libraries work on supported versions of .NET.
 
 - [![SceneGate.Hinox](https://img.shields.io/nuget/v/SceneGate.Hinox?label=SceneGate.Hinox&logo=nuget)](https://www.nuget.org/packages/SceneGate.Hinox)
-  🚧 **not ready yet**
-  - `SceneGate.Hinox.Audio`: audio codecs.
+  - `SceneGate.Hinox.Audio`: audio formats.
 
 Preview releases can be found in this
 [Azure DevOps package repository](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview).

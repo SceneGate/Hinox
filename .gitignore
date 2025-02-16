@@ -11,3 +11,9 @@ build/temp/
 *.csproj.user
 *.DotSettings.user
 launchSettings.json
+
+# Test resources
+*.received/
+*.received.*
+resources/
+!**/Hinox.Tests/Resources/
