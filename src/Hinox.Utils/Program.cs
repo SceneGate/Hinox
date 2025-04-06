@@ -19,8 +19,11 @@ app.Configure(static configurator => {
 int result = await app.RunAsync(args);
 LogManager.Shutdown();
 
-string resultColor = result == 0 ? "green" : "red";
 AnsiConsole.WriteLine();
-AnsiConsole.MarkupLineInterpolated($"[bold {resultColor}]Done ({result})![/]");
+if (result == 0) {
+    AnsiConsole.MarkupLineInterpolated($"[bold green]Success![/]");
+} else {
+    AnsiConsole.MarkupLineInterpolated($"[bold red]Failure...[/] Error code: {result}");
+}
 
 return result;

@@ -190,6 +190,13 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
             return false;
         }
 
+        if (containerInfo.OriginalLength > -1 && totalLength > containerInfo.OriginalLength) {
+            logger.LogWarning(
+                "Total audio length {Actual} is larger than original size {Original}",
+                totalLength,
+                containerInfo.OriginalLength);
+        }
+
         return true;
     }
 

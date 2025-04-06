@@ -9,6 +9,8 @@ using Yarhl.FileSystem;
 
 internal record ContainerInfo
 {
+    public long OriginalLength { get; init; } = -1;
+
     public Collection<ExportedFileInfo> Files { get; init; } = [];
 
     public static ContainerInfo Create(IEnumerable<Node> nodes)
@@ -18,6 +20,7 @@ internal record ContainerInfo
             .Select(n => new ExportedFileInfo(n.Name, 0, n.Stream!.Length))
             .ToList();
         return new ContainerInfo {
+            OriginalLength = infos.Sum(x => x.OriginalLength),
             Files = new Collection<ExportedFileInfo>(infos),
         };
     }
