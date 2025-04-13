@@ -89,10 +89,14 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
             int toneRelativeOffset = VabHeader.TonesSectionSizePerProgram * validProgramsCount;
             reader.Stream.Position = VabHeader.TonesAttributesOffset + toneRelativeOffset;
 
+            int toneIdx = -1;
             int validTonesCount = 0;
             while (validTonesCount < toneCount) {
+                toneIdx++;
+
                 // NOTE: A program has always 16 tones but the remaining ones will be empty
                 VabToneAttributes tone = ReadToneAttributes(reader);
+                tone.Index = toneIdx;
 
                 // Some games may put invalid tones before the valid ones, skip those
                 if (tone.WaveformIndex < 0) {

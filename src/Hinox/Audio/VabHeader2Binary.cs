@@ -111,11 +111,21 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
                 continue;
             }
 
+            int lastIndex = -1;
+            int writtenTones = 0;
             foreach (VabToneAttributes tone in program.TonesAttributes) {
+                while (tone.Index > lastIndex + 1) {
+                    WriteEmptyToneAttributes(writer, format.Version, program.TonesAttributes[^1]);
+                    lastIndex++;
+                    writtenTones++;
+                }
+
                 WriteToneAttributes(writer, tone);
+                lastIndex = tone.Index;
+                writtenTones++;
             }
 
-            int finalEmptyCount =  VabHeader.MaximumTones - program.TonesAttributes.Count;
+            int finalEmptyCount =  VabHeader.MaximumTones - writtenTones;
             for (int t = 0; t < finalEmptyCount; t++) {
                 WriteEmptyToneAttributes(writer, format.Version, program.TonesAttributes[^1]);
             }

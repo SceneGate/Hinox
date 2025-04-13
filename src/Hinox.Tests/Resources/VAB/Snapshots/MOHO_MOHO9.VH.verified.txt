@@ -20,6 +20,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 80,
@@ -56,6 +57,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -92,6 +94,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -128,6 +131,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -164,6 +168,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -200,6 +205,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -236,6 +242,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -272,6 +279,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -308,6 +316,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -344,6 +353,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -380,6 +390,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -416,6 +427,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -452,6 +464,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -488,6 +501,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -524,6 +538,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -560,6 +575,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -596,6 +612,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -632,6 +649,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -668,6 +686,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 75,
@@ -704,6 +723,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 75,
@@ -740,6 +760,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -776,6 +797,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 90,
@@ -799,6 +821,7 @@
           Reserved2: 54888453694881984
         },
         {
+          Index: 1,
           Priority: 0,
           Mode: 0,
           Volume: 90,
@@ -835,6 +858,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 60,
@@ -858,6 +882,7 @@
           Reserved2: 54888453694881984
         },
         {
+          Index: 1,
           Priority: 0,
           Mode: 0,
           Volume: 60,
@@ -894,6 +919,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 95,
@@ -917,6 +943,7 @@
           Reserved2: 54888453694881984
         },
         {
+          Index: 1,
           Priority: 0,
           Mode: 0,
           Volume: 110,
@@ -953,6 +980,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 80,
@@ -976,6 +1004,7 @@
           Reserved2: 54888453694881984
         },
         {
+          Index: 1,
           Priority: 0,
           Mode: 0,
           Volume: 75,
@@ -1012,6 +1041,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 110,
@@ -1035,6 +1065,7 @@
           Reserved2: 54888453694881984
         },
         {
+          Index: 1,
           Priority: 0,
           Mode: 0,
           Volume: 110,
@@ -1071,6 +1102,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1094,6 +1126,7 @@
           Reserved2: 54888453694881984
         },
         {
+          Index: 1,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1130,6 +1163,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 120,
@@ -1153,6 +1187,7 @@
           Reserved2: 54888453694881984
         },
         {
+          Index: 1,
           Priority: 0,
           Mode: 0,
           Volume: 120,
@@ -1189,6 +1224,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1225,6 +1261,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1261,6 +1298,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1297,6 +1335,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1333,6 +1372,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1369,6 +1409,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1405,6 +1446,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1441,6 +1483,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1477,6 +1520,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1513,6 +1557,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1549,6 +1594,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1585,6 +1631,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 75,
@@ -1621,6 +1668,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1657,6 +1705,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1693,6 +1742,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1729,6 +1779,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1765,6 +1816,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1801,6 +1853,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1837,6 +1890,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1873,6 +1927,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1909,6 +1964,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1945,6 +2001,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -1981,6 +2038,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -2017,6 +2075,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -2053,6 +2112,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 75,
@@ -2089,6 +2149,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 75,

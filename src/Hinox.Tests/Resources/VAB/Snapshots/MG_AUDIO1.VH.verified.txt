@@ -20,6 +20,7 @@
       Reserved2: 0,
       TonesAttributes: [
         {
+          Index: 0,
           Priority: 0,
           Mode: 0,
           Volume: 127,

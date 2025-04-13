@@ -5,6 +5,11 @@
 /// </summary>
 public class VabToneAttributes
 {
+        /// <summary>
+    /// Gets or sets the index of the tone in the program attributes.
+    /// </summary>
+    public int Index { get; set; } = -1;
+
     /// <summary>
     /// Gets or sets the priority.
     /// </summary>
