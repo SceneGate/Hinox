@@ -15,5 +15,5 @@ launchSettings.json
 # Test resources
 *.received/
 *.received.*
-resources/
+resources/tests/
 !**/Hinox.Tests/Resources/

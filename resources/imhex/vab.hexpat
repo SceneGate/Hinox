@@ -11,10 +11,10 @@
 
 import type.magic;
 import std.core;
+import std.mem;
 
 bool displayEmptyPrograms in;
 bool displayEmptyTones in;
-u32 waveformsCount out;
 
 struct VhHeader {
   type::Magic<"pBAV"> fileId;
@@ -45,13 +45,14 @@ struct VhProgramAttributes {
     u32 reserved1;
     u32 reserved2;
     
+    // Hide empty programs
     if (!displayEmptyPrograms && toneCount == 0) {
         continue;
     }
-} [[format("get_program_name")]];
+} [[format("format_program")]];
 
-fn get_program_name(VhProgramAttributes attr) {
-  return std::format("tones {}", attr.toneCount);
+fn format_program(VhProgramAttributes attr) {
+  return std::format("[tones: {}]", attr.toneCount);
 };
 
 struct VhToneAttributes {
@@ -76,25 +77,22 @@ struct VhToneAttributes {
     u16 programIndex;
     u16 waveformIndex; // starting at 1, 0 for invalid tone
     u64 reserved2;
-    
-    if (waveformIndex > waveformsCount) {
-        waveformsCount = waveformIndex;
-    }
-    
+
     if (!displayEmptyTones && waveformIndex == 0) {
         continue;
     }
-} [[format("get_tone_name")]];
+} [[format("format_tone")]];
 
-fn get_tone_name(VhToneAttributes attr) {
-  return std::format("program {}, waveform {}", attr.programIndex, attr.waveformIndex);
+fn format_tone(VhToneAttributes attr) {
+  return std::format("[program: #{}, waveform: #{}]", attr.programIndex, attr.waveformIndex);
 };
 
+// u16 wrapper for multiplying value by 8 (<< 3)
 struct WaveformLength {
     u16 length;
-} [[sealed, static, transform("lsh3"), format("lsh3")]];
+} [[sealed, static, transform("transform_waveform_length"), format("transform_waveform_length")]];
 
-fn lsh3(ref WaveformLength l) {
+fn transform_waveform_length(ref WaveformLength l) {
     u32 result = l.length << 3;
     return result;
 };
@@ -102,13 +100,12 @@ fn lsh3(ref WaveformLength l) {
 struct Vh {
     VhHeader header;
     VhProgramAttributes programs[MAX_PROGRAMS];
-    
-    // This includes empty tones. Use program.toneCount for each program
     VhToneAttributes tones[MAX_TONES * header.programCount];
  
+    // waveform lengths table
     padding[2]; // because waveformIndex is 1-based (for 0 as null) this is always 0
-    WaveformLength waveformLengths[waveformsCount];
-    padding[(MAX_WAVEFORMS - waveformsCount + 1) * 2];
+    WaveformLength waveformLengths[while(std::mem::read_unsigned($, 2) != 0)];
+    padding[(MAX_WAVEFORMS - std::core::member_count(waveformLengths) + 1) * 2];
 };
 
 struct Vag {
@@ -117,7 +114,7 @@ struct Vag {
 } [[sealed]];
 
 struct Vb {
-    Vag waveForm[waveformsCount];
+    Vag waveForms[std::core::member_count(parent.vabHeader.waveformLengths)];
 };
 
 struct Vab {
@@ -127,4 +124,3 @@ struct Vab {
 
 
 Vab vab @ 0x0000;
-std::print("Files {}", waveformsCount);
