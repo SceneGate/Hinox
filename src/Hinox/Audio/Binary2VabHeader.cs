@@ -80,7 +80,7 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
             header.ProgramsAttributes.Add(program);
 
             // Between programs, some info are empty and doesn't count toward
-            // count in header. Also added as their attributes are not constant
+            // count in header. But added as their attributes are not constant
             // so it can generate an identical file later.
             if (toneCount == 0) {
                 continue;
@@ -99,12 +99,11 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
                 tone.Index = toneIdx;
 
                 // Some games may put invalid tones before the valid ones, skip those
-                if (tone.WaveformIndex < 0) {
-                    continue;
+                if (tone.WaveformIndex >= 0) {
+                    validTonesCount++;
                 }
 
                 program.TonesAttributes.Add(tone);
-                validTonesCount++;
             }
 
             validProgramsCount++;
@@ -180,16 +179,10 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
                         $"Unxpected program index in tone #{program.Index}/{toneIdx} -> {tone.ProgramIndex}");
                 }
 
-                if (tone.WaveformIndex < 0 || tone.WaveformIndex >= sectionsInfo.WaveformCount) {
+                if (tone.WaveformIndex < -1 || tone.WaveformIndex >= sectionsInfo.WaveformCount) {
                     throw new FormatException($"Unexpected waveform index in tone #{program.Index}/{toneIdx}");
                 }
             }
-        }
-
-        if (totalTones != sectionsInfo.TotalToneCount) {
-            throw new FormatException(
-                $"Unexpected count of tones. " +
-                $"Read: {totalTones}. Header: {sectionsInfo.TotalToneCount}");
         }
 
         int actualSize = format.GetVabSize();
