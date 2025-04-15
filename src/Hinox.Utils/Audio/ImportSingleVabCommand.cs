@@ -190,13 +190,7 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
             return false;
         }
 
-        if (containerInfo.OriginalLength > -1 && totalLength > containerInfo.OriginalLength) {
-            logger.LogWarning(
-                "Total audio length {Actual} is larger than original size {Original}",
-                totalLength,
-                containerInfo.OriginalLength);
-        }
-
+        LogLargerAudios(totalLength, container, containerInfo);
         return true;
     }
 
@@ -224,15 +218,33 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
 
         // Rename to ensure duplicated files are added as copies instead of replaced
         var audioNode = new Node($"audio_{idx}", actualData);
+        return audioNode;
+    }
 
-        if (audioInfo.OriginalLength > -1 && audioNode.Stream!.Length > audioInfo.OriginalLength) {
+    private void LogLargerAudios(long totalVbLength, Node container, ContainerInfo containerInfo)
+    {
+        bool isVbLarger = containerInfo.OriginalLength > -1
+            && totalVbLength > containerInfo.OriginalLength;
+        if (isVbLarger) {
             logger.LogWarning(
-                "Audio '{Path}' with file size {Actual} larger than original size {Original}",
-                audioInfo.Path,
-                audioNode.Stream!.Length,
-                audioInfo.OriginalLength);
+                "Total audio length {Actual} is larger than original size {Original}",
+                totalVbLength,
+                containerInfo.OriginalLength);
         }
 
-        return audioNode;
+        for (int i = 0; i < containerInfo.Files.Count; i++) {
+            ExportedFileInfo audioInfo = containerInfo.Files[i];
+            Node audioNode = container.Children[$"audio_{i}"]!;
+
+            if (audioInfo.OriginalLength > -1 && audioNode.Stream!.Length > audioInfo.OriginalLength) {
+                LogLevel severity = isVbLarger ? LogLevel.Warning : LogLevel.Information;
+                logger.Log(
+                    severity,
+                    "Audio '{Path}' with file size {Actual} larger than original size {Original}",
+                    audioInfo.Path,
+                    audioNode.Stream!.Length,
+                    audioInfo.OriginalLength);
+            }
+        }
     }
 }

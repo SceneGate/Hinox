@@ -39,6 +39,11 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         [Description("Path to the directory to write the output files.")]
         public required string OutputPath { get; set; }
 
+        [CommandOption("--support-non-compliant")]
+        [Description("Support non-compliant formats")]
+        [DefaultValue(false)]
+        public bool SupportNonCompliant { get; set; }
+
         [CommandOption("-v|--verbosity")]
         [Description("Logging output verbosity")]
         [DefaultValue(LogLevel.Warning)]
@@ -157,22 +162,30 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
     private Node ReadContainer(Settings settings)
     {
         return string.IsNullOrEmpty(settings.VabPath)
-            ? ReadHeaderBodyFiles(settings.HeaderPath!, settings.BodyPath!)
-            : ReadVabFile(settings.VabPath);
+            ? ReadHeaderBodyFiles(settings.HeaderPath!, settings.BodyPath!, settings.SupportNonCompliant)
+            : ReadVabFile(settings.VabPath, settings.SupportNonCompliant);
     }
 
-    private Node ReadVabFile(string vabPath)
+    private Node ReadVabFile(string vabPath, bool supportNonCompliant)
     {
         logger.LogInformation("Reading VAB '{Path}'", Path.GetFullPath(vabPath));
+        var converter = supportNonCompliant
+            ? new BinaryVab2Container(includePaddingTones: true, throwOnInvalid: false)
+            : new BinaryVab2Container(includePaddingTones: false, throwOnInvalid: true);
+
         return NodeFactory.FromFile(vabPath, FileOpenMode.Read)
-            .TransformWith<BinaryVab2Container>();
+            .TransformWith(converter);
     }
 
-    private Node ReadHeaderBodyFiles(string headerPath, string bodyPath)
+    private Node ReadHeaderBodyFiles(string headerPath, string bodyPath, bool supportNonCompliant)
     {
         logger.LogInformation("Reading VH '{Path}'", Path.GetFullPath(headerPath));
+        var converter = supportNonCompliant
+            ? new Binary2VabHeader(includePaddingTones: true, throwOnInvalid: false)
+            : new Binary2VabHeader(includePaddingTones: false, throwOnInvalid: true);
+
         Node headerNode = NodeFactory.FromFile(headerPath, "header", FileOpenMode.Read)
-            .TransformWith<Binary2VabHeader>();
+            .TransformWith(converter);
         VabHeader header = headerNode.GetFormatAs<VabHeader>()!;
 
         logger.LogInformation("Reading VB '{Path}'", Path.GetFullPath(bodyPath));
