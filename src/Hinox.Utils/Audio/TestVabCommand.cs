@@ -42,9 +42,9 @@ internal sealed class TestVabCommand : Command<TestVabCommand.Settings>
         return 0;
     }
 
-    private static ReadOnlyCollection<TestResult> VabSearchAndTest(Settings settings)
+    private static ReadOnlyCollection<FormatTestResult> VabSearchAndTest(Settings settings)
     {
-        List<TestResult> results = [];
+        List<FormatTestResult> results = [];
 
         var searchOptions = settings.RecursiveSearch ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
         var matchingFiles = Directory.EnumerateFiles(settings.InputPath, "*.vab", searchOptions).ToArray();
@@ -62,9 +62,9 @@ internal sealed class TestVabCommand : Command<TestVabCommand.Settings>
         return results.AsReadOnly();
     }
 
-    private ReadOnlyCollection<TestResult> VhVbSearchAndTest(Settings settings)
+    private ReadOnlyCollection<FormatTestResult> VhVbSearchAndTest(Settings settings)
     {
-        List<TestResult> results = [];
+        List<FormatTestResult> results = [];
 
         var searchOptions = settings.RecursiveSearch ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
         var matchingFiles = Directory.EnumerateFiles(settings.InputPath, "*.vh", searchOptions).ToArray();
@@ -89,15 +89,16 @@ internal sealed class TestVabCommand : Command<TestVabCommand.Settings>
         return results.AsReadOnly();
     }
 
-    private static TestResult TestVab(string inputVab)
+    private static FormatTestResult TestVab(string inputVab)
     {
         using var binaryVab = new BinaryFormat(inputVab, FileOpenMode.Read);
 
         NodeContainerFormat container;
         try {
-            container = new BinaryVab2Container().Convert(binaryVab);
+            container = new BinaryVab2Container(includePaddingTones: true, throwOnInvalid: false)
+                .Convert(binaryVab);
         } catch (Exception ex) {
-            return new TestResult(inputVab, "VAB", false, null, null, ex.Message);
+            return new FormatTestResult(inputVab, "VAB", false, null, null, ex.Message);
         }
 
         BinaryFormat generatedVab;
@@ -105,32 +106,33 @@ internal sealed class TestVabCommand : Command<TestVabCommand.Settings>
             generatedVab = new Container2BinaryVab(autodetectVag: false).Convert(container);
         } catch (Exception ex) {
             container.Dispose();
-            return new TestResult(inputVab, "VAB", true, false, null, ex.Message);
+            return new FormatTestResult(inputVab, "VAB", true, false, null, ex.Message);
         }
 
         bool isIdentical = generatedVab.Stream.Compare(binaryVab.Stream);
         generatedVab.Dispose();
 
-        return new TestResult(inputVab, "VAB", true, true, isIdentical, null);
+        return new FormatTestResult(inputVab, "VAB", true, true, isIdentical, null);
     }
 
-    private static IEnumerable<TestResult> TestVhVb(string inputVh, string inputVb)
+    private static IEnumerable<FormatTestResult> TestVhVb(string inputVh, string inputVb)
     {
         using var binaryVh = new BinaryFormat(inputVh, FileOpenMode.Read);
         using var binaryVb = new BinaryFormat(inputVb, FileOpenMode.Read);
 
         VabHeader header;
         try {
-            header = new Binary2VabHeader().Convert(binaryVh);
+            header = new Binary2VabHeader(includePaddingTones: true, throwOnInvalid: false)
+                .Convert(binaryVh);
         } catch (Exception ex) {
-            return [new TestResult(inputVh, "VH", false, null, null, ex.Message)];
+            return [new FormatTestResult(inputVh, "VH", false, null, null, ex.Message)];
         }
 
         NodeContainerFormat container;
         try {
             container = new BinaryVabBody2Container(header).Convert(binaryVb);
         } catch (Exception ex) {
-            return [new TestResult(inputVb, "VB", false, null, null, ex.Message)];
+            return [new FormatTestResult(inputVb, "VB", false, null, null, ex.Message)];
         }
 
         BinaryFormat generatedVh;
@@ -138,7 +140,7 @@ internal sealed class TestVabCommand : Command<TestVabCommand.Settings>
             generatedVh = new VabHeader2Binary().Convert(header);
         } catch (Exception ex) {
             container.Dispose();
-            return [new TestResult(inputVh, "VH", true, false, null, ex.Message)];
+            return [new FormatTestResult(inputVh, "VH", true, false, null, ex.Message)];
         }
 
         BinaryFormat generatedVb;
@@ -147,7 +149,7 @@ internal sealed class TestVabCommand : Command<TestVabCommand.Settings>
         } catch (Exception ex) {
             generatedVh.Dispose();
             container.Dispose();
-            return [new TestResult(inputVb, "VB", true, false, null, ex.Message)];
+            return [new FormatTestResult(inputVb, "VB", true, false, null, ex.Message)];
         }
 
         bool isVhIdentical = generatedVh.Stream.Compare(binaryVh.Stream);
@@ -157,12 +159,12 @@ internal sealed class TestVabCommand : Command<TestVabCommand.Settings>
         generatedVb.Dispose();
 
         return [
-            new TestResult(inputVh, "VH", true, true, isVhIdentical, null),
-            new TestResult(inputVb, "VB", true, true, isVbIdentical, null),
+            new FormatTestResult(inputVh, "VH", true, true, isVhIdentical, null),
+            new FormatTestResult(inputVb, "VB", true, true, isVbIdentical, null),
         ];
     }
 
-    private static void PrintResult(IEnumerable<TestResult> results)
+    private static void PrintResult(IEnumerable<FormatTestResult> results)
     {
         static IRenderable RenderIsSucceed(bool? x) =>
             x switch {
@@ -175,24 +177,83 @@ internal sealed class TestVabCommand : Command<TestVabCommand.Settings>
 
         var table = new Table();
         table.AddColumns("Path", "Format", "Read", "Write", "Identical", "Error");
+
+        var readResults = new TestTotalResult();
+        var writeResults = new TestTotalResult();
+        var identicalResults = new TestTotalResult();
         foreach (var result in results) {
+            readResults.AddResult(result.ReadSucceed);
+            writeResults.AddResult(result.WriteSucceed);
+            identicalResults.AddResult(result.Identical);
+
             table.AddRow(
                 new TextPath(result.Path),
                 new Text(result.Format),
                 RenderIsSucceed(result.ReadSucceed),
-                RenderIsSucceed(result.WriteSucced),
+                RenderIsSucceed(result.WriteSucceed),
                 RenderIsSucceed(result.Identical),
                 new Text(result.ErrorMessage ?? string.Empty));
         }
 
         AnsiConsole.Write(table);
+
+        var totalTable = new Table();
+        totalTable.AddColumns("Operation", "Total", "Successful", "Failed", "Indeterminate");
+        totalTable.AddRow(
+            "Read",
+            readResults.Total.ToString(),
+            readResults.GetSuccessfulRate(),
+            readResults.GetFailedRate(),
+            readResults.Indeterminate.ToString());
+        totalTable.AddRow(
+            "Write",
+            writeResults.Total.ToString(),
+            writeResults.GetSuccessfulRate(),
+            writeResults.GetFailedRate(),
+            writeResults.Indeterminate.ToString());
+        totalTable.AddRow(
+            "Identical",
+            identicalResults.Total.ToString(),
+            identicalResults.GetSuccessfulRate(),
+            identicalResults.GetFailedRate(),
+            identicalResults.Indeterminate.ToString());
+        AnsiConsole.Write(totalTable);
     }
 
-    private sealed record TestResult(
+    private sealed record FormatTestResult(
         string Path,
         string Format,
         bool ReadSucceed,
-        bool? WriteSucced,
+        bool? WriteSucceed,
         bool? Identical,
         string? ErrorMessage);
+
+    private sealed class TestTotalResult
+    {
+        public int Total { get; private set; }
+
+        public int Successful {  get; private set; }
+
+        public int Failed { get; private set; }
+
+        public int Indeterminate { get; private set; }
+
+        public string GetSuccessfulRate() => $"{Successful} ({Successful / (Total - Indeterminate):P1})";
+
+        public string GetFailedRate() => $"{Failed} ({Failed / (Total - Indeterminate):P1})";
+
+        public void AddResult(bool? result)
+        {
+            Total++;
+            if (result.HasValue) {
+                if (result.Value) {
+                    Successful++;
+                } else {
+                    Failed++;
+                }
+            } else {
+                Indeterminate++;
+            }
+        }
+    }
 }

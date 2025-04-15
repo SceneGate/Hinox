@@ -5,10 +5,16 @@
 /// </summary>
 public class VabToneAttributes
 {
-        /// <summary>
-    /// Gets or sets the index of the tone in the program attributes.
+    /// <summary>
+    /// Gets or sets a value indicating whether this tone contains valid info.
     /// </summary>
-    public int Index { get; set; } = -1;
+    /// <remarks>
+    /// This field is used to distinguished tone attributes written in VAB
+    /// header for padding. They don't point to a waveform. It allows to
+    /// recreate an identical VH to the original even when the format doesn't
+    /// follow the specification well.
+    /// </remarks>
+    public bool IsValid { get; set; } = false;
 
     /// <summary>
     /// Gets or sets the priority.

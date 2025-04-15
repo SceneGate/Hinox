@@ -38,7 +38,7 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
     {
         int programCount = format.ProgramsAttributes.Count(p => p.TonesAttributes.Count > 0);
         int toneCount = format.ProgramsAttributes.Sum(p =>
-            p.TonesAttributes.Count(t => t.WaveformIndex >= 0));
+            p.TonesAttributes.Count(t => t.IsValid));
         int waveformsCount = format.WaveformSizes.Count;
 
         writer.Write(VabHeader.FormatId, nullTerminator: false);
@@ -78,7 +78,7 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
 
     private static void WriteProgramAttributes(DataWriter writer, VabProgramAttributes program)
     {
-        int tonesCount = program.TonesAttributes.Count(t => t.WaveformIndex >= 0);
+        int tonesCount = program.TonesAttributes.Count(t => t.IsValid);
         writer.Write((byte)tonesCount);
         writer.Write(program.MasterVolume);
         writer.Write(program.Priority);
@@ -113,17 +113,9 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
                 continue;
             }
 
-            int lastIndex = -1;
             int writtenTones = 0;
             foreach (VabToneAttributes tone in program.TonesAttributes) {
-                while (tone.Index > lastIndex + 1) {
-                    WriteEmptyToneAttributes(writer, format.Version, program.TonesAttributes[^1]);
-                    lastIndex++;
-                    writtenTones++;
-                }
-
                 WriteToneAttributes(writer, tone);
-                lastIndex = tone.Index;
                 writtenTones++;
             }
 

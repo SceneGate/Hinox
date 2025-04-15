@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using SceneGate.Hinox.Audio;
-using VerifyTests;
 using Yarhl.IO;
 
 [TestFixture]
@@ -21,7 +20,8 @@ public class Container2BinaryVabTests
 
         using var originalBinary = new BinaryFormat(vabPath, FileOpenMode.Read);
 
-        var deserialized = new BinaryVab2Container().Convert(originalBinary);
+        var deserialized = new BinaryVab2Container(includePaddingTones: true, throwOnInvalid: false)
+            .Convert(originalBinary);
         using BinaryFormat newBinary = new Container2BinaryVab().Convert(deserialized);
 
         bool identical = newBinary.Stream.Compare(originalBinary.Stream);

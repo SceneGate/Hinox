@@ -1,5 +1,5 @@
 # V5 - 0 programs
 S001.vab
 
-# [Digimon Rumble Arena] V7 - Empty tones between valid
+# [Digimon Rumble Arena PAL] V7 - Empty tones between valid
 DRA_ch08.vab

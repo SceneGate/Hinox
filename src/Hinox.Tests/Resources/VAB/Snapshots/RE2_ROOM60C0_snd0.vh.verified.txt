@@ -20,7 +20,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
-          Index: 0,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 0,
@@ -44,7 +44,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 1,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 85,
@@ -68,7 +68,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 2,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 85,
@@ -92,7 +92,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 3,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 90,
@@ -116,7 +116,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 4,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 50,
@@ -140,7 +140,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 5,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 60,
@@ -164,7 +164,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 6,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 90,
@@ -188,7 +188,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 7,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 75,
@@ -212,7 +212,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 8,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 90,
@@ -236,7 +236,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 9,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 90,
@@ -260,7 +260,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 10,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 110,
@@ -284,7 +284,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 11,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 0,
@@ -308,7 +308,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 12,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 80,
@@ -332,7 +332,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 13,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -356,7 +356,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 14,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -380,7 +380,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 15,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 120,
@@ -417,7 +417,7 @@
       Reserved2: -1,
       TonesAttributes: [
         {
-          Index: 0,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 0,
@@ -441,7 +441,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 1,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -465,7 +465,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 2,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 80,
@@ -489,7 +489,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 3,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 0,
@@ -513,7 +513,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 4,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 127,
@@ -537,7 +537,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 5,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 120,
@@ -561,7 +561,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 6,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 70,
@@ -585,7 +585,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 7,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 90,
@@ -609,7 +609,7 @@
           Reserved2: 54888453694881984
         },
         {
-          Index: 8,
+          IsValid: true,
           Priority: 0,
           Mode: 0,
           Volume: 110,

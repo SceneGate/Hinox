@@ -17,6 +17,9 @@ public class Binary2VabHeaderTests
     private static IEnumerable VhSnapshotTestFiles =>
         TestDataBase.ReadTestCaseDataListFile(TestDataBase.VabResources, "vh_snapshots.txt");
 
+    private static IEnumerable VhFullSnapshotTestFiles =>
+        TestDataBase.ReadTestCaseDataListFile(TestDataBase.VabResources, "vh_snapshots_full.txt");
+
     private static IEnumerable<TestCaseData> VhReadingTestFiles =>
         TestDataBase.ReadTestCaseDataGlobFile(TestDataBase.VabResources, "vh_read.txt");
 
@@ -39,6 +42,25 @@ public class Binary2VabHeaderTests
             });
     }
 
+    [TestCaseSource(nameof(VhFullSnapshotTestFiles))]
+    public Task VerifyDeserializationForSnapshotsWithFullContent(string filename)
+    {
+        string filePath = Path.Combine(TestDataBase.VabResources, "Snapshots", filename);
+        TestDataBase.IgnoreIfFileDoesNotExist(filePath);
+
+        using Node testNode = NodeFactory.FromFile(filePath, FileOpenMode.Read)
+            .TransformWith(new Binary2VabHeader(includePaddingTones: true, throwOnInvalid: false));
+        VabHeader actual = testNode.GetFormatAs<VabHeader>();
+
+        Verifier.UseProjectRelativeDirectory("Resources/VAB/Snapshots");
+        return Verifier.Verify(actual)
+            .UseFileName(filename)
+            .AddExtraSettings(x => {
+                x.DefaultValueHandling = Argon.DefaultValueHandling.Include;
+                x.Converters.Add(new HexadecimalVerifierJsonConverter<VabHeader>());
+            });
+    }
+
     [TestCaseSource(nameof(VhReadingTestFiles))]
     public void ValidateAllFiles(string filePath)
     {
@@ -46,7 +68,10 @@ public class Binary2VabHeaderTests
 
         using Node testNode = NodeFactory.FromFile(filePath, FileOpenMode.Read);
 
-        Assert.That(testNode.TransformWith<Binary2VabHeader>, Throws.Nothing);
+        Assert.That(
+            () => testNode.TransformWith(
+                new Binary2VabHeader(includePaddingTones: true, throwOnInvalid: false)),
+            Throws.Nothing);
         Assert.That(testNode.Format, Is.TypeOf<VabHeader>());
     }
 }

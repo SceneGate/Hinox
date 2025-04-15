@@ -19,7 +19,8 @@ public class VabHeader2BinaryTests
 
         using var originalBinary = new BinaryFormat(filePath, FileOpenMode.Read);
 
-        var deserialized = new Binary2VabHeader().Convert(originalBinary);
+        var deserialized = new Binary2VabHeader(includePaddingTones: true, throwOnInvalid: false)
+            .Convert(originalBinary);
         BinaryFormat newBinary = new VabHeader2Binary().Convert(deserialized);
 
         bool identical = newBinary.Stream.Compare(originalBinary.Stream);

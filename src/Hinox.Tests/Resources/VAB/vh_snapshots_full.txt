@@ -1,0 +1,7 @@
+﻿## Snapshots extracted with all program and tone attributes including padding
+
+# [TimeCrisis1] Single padding tone with custom attributes
+TIM1_3.vh
+
+# [Digimon Rumble Arena NTSC] Tone pointing to a non-existing waveform
+DRA_mv23.vh

@@ -12,6 +12,50 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
 {
     private static readonly int[] supportedVersions = [5, 6, 7];
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Binary2VabHeader"/> class.
+    /// </summary>
+    public Binary2VabHeader()
+    {
+        IncludePaddingEntries = false;
+        ThrowOnInvalidData = true;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Binary2VabHeader"/> class.
+    /// </summary>
+    /// <param name="includePaddingTones">
+    /// Value that indicates whether to include empty programs and tones.
+    /// </param>
+    /// <param name="throwOnInvalid">
+    /// Value indicating whether to throw exceptions on unexpected data.
+    /// </param>
+    public Binary2VabHeader(bool includePaddingTones, bool throwOnInvalid)
+    {
+        IncludePaddingEntries = includePaddingTones;
+        ThrowOnInvalidData = throwOnInvalid;
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to include empty programs and
+    /// tones without a valid waveform links.
+    /// </summary>
+    /// <remarks>
+    /// Setting to true allows to recreate the original header even when it
+    /// doesn't follow standard rules, but the exported content would be more
+    /// verbosed.
+    /// </remarks>
+    public bool IncludePaddingEntries { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to throw exceptions if the read
+    /// data contains unexpected information that doesn't match the specs.
+    /// </summary>
+    /// <remarks>
+    /// Some games didn't generate full complaint files but valid enough to work.
+    /// </remarks>
+    public bool ThrowOnInvalidData { get; set; }
+
     /// <inheritdoc />
     public VabHeader Convert(IBinary source)
     {
@@ -31,7 +75,9 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
             + (VabHeader.TonesSectionSizePerProgram * sectionsInfo.ProgramCount);
         ReadWaveformSizes(reader, header, sectionsInfo.WaveformCount);
 
-        ValidateFormat(header, sectionsInfo);
+        if (ThrowOnInvalidData) {
+            ValidateFormat(header, sectionsInfo);
+        }
 
         return header;
     }
@@ -65,11 +111,15 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
         return new SectionsInfo(fullSize, programCount, toneCount, waveformCount);
     }
 
-    private static void ReadProgramsWithAttributes(DataReader reader, VabHeader header, SectionsInfo sectionsInfo)
+    private void ReadProgramsWithAttributes(DataReader reader, VabHeader header, SectionsInfo sectionsInfo)
     {
         int programIdx = -1;
+        int readPrograms = 0;
         int validProgramsCount = 0;
-        while (validProgramsCount < sectionsInfo.ProgramCount) {
+        int programCount = IncludePaddingEntries
+            ? VabHeader.MaximumPrograms
+            : sectionsInfo.ProgramCount;
+        while (readPrograms < programCount) {
             programIdx++;
 
             int relativeOffset = programIdx * VabHeader.ProgramAttributesSize;
@@ -83,29 +133,38 @@ public class Binary2VabHeader : IConverter<IBinary, VabHeader>
             // count in header. But added as their attributes are not constant
             // so it can generate an identical file later.
             if (toneCount == 0) {
+                if (IncludePaddingEntries) {
+                    readPrograms++;
+                }
+
                 continue;
             }
 
             int toneRelativeOffset = VabHeader.TonesSectionSizePerProgram * validProgramsCount;
             reader.Stream.Position = VabHeader.TonesAttributesOffset + toneRelativeOffset;
 
-            int toneIdx = -1;
-            int validTonesCount = 0;
-            while (validTonesCount < toneCount) {
-                toneIdx++;
-
+            int readTones = 0;
+            int readValidTones = 0;
+            int tonesToRead = IncludePaddingEntries ? VabHeader.MaximumTones : toneCount;
+            while (readTones < tonesToRead) {
                 // NOTE: A program has always 16 tones but the remaining ones will be empty
                 VabToneAttributes tone = ReadToneAttributes(reader);
-                tone.Index = toneIdx;
-
-                // Some games may put invalid tones before the valid ones, skip those
-                if (tone.WaveformIndex >= 0) {
-                    validTonesCount++;
-                }
+                tone.IsValid = readValidTones < toneCount && tone.WaveformIndex >= 0;
 
                 program.TonesAttributes.Add(tone);
+
+                // Similar to programs, some files may have empty tones before
+                // the ones that count. We add them as their info is not constant.
+                if (tone.IsValid || IncludePaddingEntries) {
+                    readTones++;
+                }
+
+                if (tone.IsValid) {
+                    readValidTones++;
+                }
             }
 
+            readPrograms++;
             validProgramsCount++;
         }
     }
