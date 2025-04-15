@@ -80,6 +80,14 @@ internal class ImportSingleVabCommand : Command<ImportSingleVabCommand.Settings>
         AppLoggerFactory.MinimumLevel = settings.Verbosity;
         logger = AppLoggerFactory.CreateLogger<ImportSingleVabCommand>();
 
+        if (context.Remaining.Parsed.Any() || context.Remaining.Raw.Any()) {
+            logger.LogCritical(
+                "Unrecognized options: {Parsed}, {Raw}",
+                context.Remaining.Parsed.Select(x => x.Key),
+                context.Remaining.Raw);
+            return 2;
+        }
+
         using Node? container = ReadContainer(settings.ContainerInfoPath, settings.VabHeader, settings.AutoDetectVag);
         if (container is null) {
             return 1;

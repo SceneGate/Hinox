@@ -33,6 +33,14 @@ internal sealed class TestVabCommand : Command<TestVabCommand.Settings>
     {
         logger = AppLoggerFactory.CreateLogger<TestVabCommand>();
 
+        if (context.Remaining.Parsed.Any() || context.Remaining.Raw.Any()) {
+            logger.LogCritical(
+                "Unrecognized options: {Parsed}, {Raw}",
+                context.Remaining.Parsed.Select(x => x.Key),
+                context.Remaining.Raw);
+            return 2;
+        }
+
         var vabResults = VabSearchAndTest(settings);
         var vhvbResults = VhVbSearchAndTest(settings);
 

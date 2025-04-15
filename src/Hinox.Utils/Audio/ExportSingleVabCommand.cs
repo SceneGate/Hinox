@@ -92,6 +92,14 @@ internal class ExportSingleVabCommand : Command<ExportSingleVabCommand.Settings>
         AppLoggerFactory.MinimumLevel = settings.Verbosity;
         logger = AppLoggerFactory.CreateLogger<ExportSingleVabCommand>();
 
+        if (context.Remaining.Parsed.Any() || context.Remaining.Raw.Any()) {
+            logger.LogCritical(
+                "Unrecognized options: {Parsed}, {Raw}",
+                context.Remaining.Parsed.Select(x => x.Key),
+                context.Remaining.Raw);
+            return 2;
+        }
+
         using Node container = ReadContainer(settings);
         logger.LogDebug("Found {Count} audios", container.Children.Count - 1);
 
