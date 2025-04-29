@@ -1,3 +1,6 @@
+- name: Tool
+  href: articles/tool/
+
 - name: Dev guides
   href: articles/dev/
 

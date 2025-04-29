@@ -1,46 +1,42 @@
 # Hinox [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://choosealicense.com/licenses/mit/)
 
-_Hinox_ is a library part of the [_SceneGate_](https://github.com/SceneGate)
-framework that provides support for _PS1_ (PSX) file formats.
+_Hinox_ is a set of libraries and utilities part of the
+[_SceneGate_](https://github.com/SceneGate) framework that provides support for
+_PS1_ (PSX) file formats.
 
 ## Supported formats
 
-🚧 Project in an early development phase. No formats are supported yet.
+- :speaker: **VAB** audio containers
+  - Versions 5, 6 and 7
+  - Reading and writing header (VH) and body (VB and VAB)
+  - Tool to export and import.
+  - Limitation: the VAG format and its audio codec are not supported yet.
 
-## Usage
+## Getting started guide
 
-The project provides the following .NET libraries (NuGet packages in nuget.org).
-The libraries work on supported versions of .NET.
+### Tooling
+
+The project provides an application to convert files between different formats.
+This is a _console_ application, it doesn't have a graphical interface (no
+window). Use a terminal like _Windows Terminal_ on Windows or bash on Unix.
+
+Follow the [installation](./articles/tool/install.md) instructions, then head
+directly to some of its commands like the [VAB export](./articles/tool/vab.md).
+
+### Development libraries
+
+The Hinox .NET (C#) library provides models representing file formats and
+[Yarhl](https://scenegate.github.io/Yarhl/docs/core/formats/converters.html)
+converters for their (de)serialization. Check-out the additional dev categories
+for information in the APIs available.
 
 - [![SceneGate.Hinox](https://img.shields.io/nuget/v/SceneGate.Hinox?label=SceneGate.Hinox&logo=nuget)](https://www.nuget.org/packages/SceneGate.Hinox)
-  🚧 **not ready yet**
   - `SceneGate.Hinox.Audio`: audio codecs.
 
-### Preview release
-
-Preview releases can be found in this
-[Azure DevOps package repository](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview).
-To use a preview release, create a file `nuget.config` in the same directory of
-your solution file (.sln) with the following content:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
-  <packageSources>
-    <clear/>
-    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-    <add key="SceneGate-Preview" value="https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json" />
-  </packageSources>
-  <packageSourceMapping>
-    <packageSource key="nuget.org">
-      <package pattern="*" />
-    </packageSource>
-    <packageSource key="SceneGate-Preview">
-      <package pattern="SceneGate.Hinox*" />
-    </packageSource>
-  </packageSourceMapping>
-</configuration>
-```
+It's recommended to become familiar with the basic concepts of Yarhl before
+starting to use this project. Check-out its
+[tutorial](https://scenegate.github.io/Yarhl/docs/core/getting-started/tutorial.html)
+for a quick introduction.
 
 ## Special thanks
 

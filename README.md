@@ -20,8 +20,9 @@
   &nbsp;
 </p>
 
-_Hinox_ is a library part of the [_SceneGate_](https://github.com/SceneGate)
-framework that provides support for **PS1 (PSX) file formats.**
+_Hinox_ is a set of libraries and utilities part of the
+[_SceneGate_](https://github.com/SceneGate) framework that provides support for
+**PS1 (PSX) file formats.**
 
 ## Supported formats
 
@@ -30,13 +31,24 @@ framework that provides support for **PS1 (PSX) file formats.**
   - Header (VH): read and write
   - Body (VB and VAB): read and write
 
-## Usage
+## Tool installation
 
-The project provides the following .NET libraries (NuGet packages in nuget.org).
-The libraries work on supported versions of .NET.
+1. Install [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+2. Install the latest version of the tool:
+   `dotnet tool install -g SceneGate.Hinox.Utils`
+   - You can update it with `dotnet tool update -g SceneGate.Hinox.Utils`
+   - To use preview versions, add the argument
+     `--prerelease --add-source https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json`
+
+## Library installation
+
+The project provides the following .NET (C#) libraries. Only the latest LTS
+version of .NET and higher are supported (no .NET Framework).
 
 - [![SceneGate.Hinox](https://img.shields.io/nuget/v/SceneGate.Hinox?label=SceneGate.Hinox&logo=nuget)](https://www.nuget.org/packages/SceneGate.Hinox)
   - `SceneGate.Hinox.Audio`: audio formats.
+
+Stable releases are published in nuget.org.
 
 Preview releases can be found in this
 [Azure DevOps package repository](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview).
@@ -64,7 +76,7 @@ your solution file (.sln) with the following content:
 
 ## Documentation
 
-Documentation is not yet available, but it will be published in the
+Documentation is available in the
 [project website](https://scenegate.github.io/Hinox).
 
 Don't hesitate to ask questions in the
