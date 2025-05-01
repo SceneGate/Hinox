@@ -12,9 +12,7 @@ _PS1_ (PSX) file formats.
   - Tool to export and import.
   - Limitation: the VAG format and its audio codec are not supported yet.
 
-## Getting started guide
-
-### Tooling
+## Tooling
 
 The project provides an application to convert files between different formats.
 This is a _console_ application, it doesn't have a graphical interface (no
@@ -23,7 +21,7 @@ window). Use a terminal like _Windows Terminal_ on Windows or bash on Unix.
 Follow the [installation](./articles/tool/install.md) instructions, then head
 directly to some of its commands like the [VAB export](./articles/tool/vab.md).
 
-### Development libraries
+## Development libraries
 
 The Hinox .NET (C#) library provides models representing file formats and
 [Yarhl](https://scenegate.github.io/Yarhl/docs/core/formats/converters.html)
