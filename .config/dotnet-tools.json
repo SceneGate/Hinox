@@ -17,14 +17,14 @@
       "rollForward": false
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "5.2.0",
+      "version": "5.4.5",
       "commands": [
         "reportgenerator"
       ],
       "rollForward": false
     },
     "docfx": {
-      "version": "2.78.2",
+      "version": "2.78.3",
       "commands": [
         "docfx"
       ],

@@ -1,2 +1,7 @@
 Hinox
 SceneGate
+uint
+ushort
+VAG
+SPU
+VB

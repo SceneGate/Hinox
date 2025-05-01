@@ -1,0 +1,90 @@
+﻿[
+  {
+    Format: {
+      Offset: 0x0,
+      Position: 0x0,
+      Length: 0xD30,
+      SHA256: 1FA753CE387CFA25CEA102F0CF36DB692C1F739F82203E5F795498964EB07447
+    },
+    Name: audio0000,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0xD30,
+      Position: 0x0,
+      Length: 0x3DA0,
+      SHA256: C4EBD0AD1BF1D748DA2A15C91EE97CA66DEB204F79FE71F165FBFA0827082BAF
+    },
+    Name: audio0001,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x4AD0,
+      Position: 0x0,
+      Length: 0x13F0,
+      SHA256: A0BC708D1A56FBDFD986E16CC422A9863F9FDA5B5527AAE3B5891AFD16E9A2A9
+    },
+    Name: audio0002,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x5EC0,
+      Position: 0x0,
+      Length: 0x4680,
+      SHA256: 1243CFB48C2F251F718FB5DEECAA1778D46BFE734F8F6CDF580BBFB8F6A03435
+    },
+    Name: audio0003,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0xA540,
+      Position: 0x0,
+      Length: 0xB760,
+      SHA256: 5112DA9E85158AD83D7877EA014070BEE0E1969FBFE83ED5AC110470D5FBD53E
+    },
+    Name: audio0004,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x15CA0,
+      Position: 0x0,
+      Length: 0x5130,
+      SHA256: 1210A66CA10D902B0236D47F2D08BBAC4F03199CB4FE05DA6D5E064392C93D41
+    },
+    Name: audio0005,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x1ADD0,
+      Position: 0x0,
+      Length: 0x12660,
+      SHA256: 4C311B4D28B640A33490ED6FAC112B5EBEEFCF564FDD6689A6D5CB31E9A18D92
+    },
+    Name: audio0006,
+    Children: null,
+    Tags: null
+  },
+  {
+    Format: {
+      Offset: 0x2D430,
+      Position: 0x0,
+      Length: 0x2380,
+      SHA256: 62A5B00699A0C23DED7B0F17E13B245CA7EEF35B8B91E573265624582EED241E
+    },
+    Name: audio0007,
+    Children: null,
+    Tags: null
+  }
+]

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <AssemblyName>SceneGate.Hinox</AssemblyName>
@@ -15,6 +15,10 @@
   <ItemGroup>
     <None Include="../../docs/images/logo_128.png" Pack="true" PackagePath="$(PackageIcon)" Visible="false" />
     <None Include="../../docs/index.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="False" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Yarhl" />
   </ItemGroup>
 
 </Project>

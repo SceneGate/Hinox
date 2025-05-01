@@ -1,13 +1,7 @@
-- name: ✨ Getting started
-- name: Introduction
-  href: ../../index.md
-- name: 🚧 Getting started guide
-  href: tutorial.md
-
 - name: ♻️ Converters
-- name: 🚧 Audio
-  href: features/audio.md
+- name: 🚧 VAB audio
+  href: features/vab.md
 
-# - name: 📃 API docs
-# - name: Namespaces
-#   href: ../../api/toc.yml
+- name: 📃 API docs
+- name: Namespaces
+  href: ../../api/toc.yml
