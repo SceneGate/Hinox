@@ -176,7 +176,7 @@ public class VabHeader2Binary : IConverter<VabHeader, BinaryFormat>
         writer.Write(reference.Reserved0);
         writer.Write(reference.Reserved1);
 
-        if (version == 5) {
+        if (version <= 5) {
             writer.Write(reference.EnvelopeSettings1);
             writer.Write(reference.EnvelopeSettings2);
         } else if (version == 6) {
